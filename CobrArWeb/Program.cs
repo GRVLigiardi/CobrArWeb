@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using CobrArWeb.Services;
+using CobrArWeb.Services.Interfaces;
 using CobrArWeb.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<CobrArWebContext>(item => item.UseSqlServer("name=ConnectionStrings:CobrArWeb"));
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
+
+});
 
 var app = builder.Build();
 
@@ -23,7 +31,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
