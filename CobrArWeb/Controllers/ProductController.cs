@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CobrArWeb.Data;
-using CobrarWeb.Services;
+using CobrArWeb.Services;
 using CobrArWeb.Services.Interfaces;
-using CobrarWeb.Services.Interfaces;
+using CobrArWeb.Services.Interfaces;
 
 namespace CobrArWeb.Controllers
 {

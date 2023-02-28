@@ -1,6 +1,6 @@
 ﻿using CobrArWeb.Data;
 
-namespace CobrarWeb.Services.Interfaces
+namespace CobrArWeb.Services.Interfaces
 {
     public interface IProductService
     {

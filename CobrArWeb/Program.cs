@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using CobrArWeb.Services;
 using CobrArWeb.Data;
-using CobrarWeb.Services.Interfaces;
+using CobrArWeb.Services.Interfaces;
 using CobrArWeb.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<CobrArWebContext>(item => item.UseSqlServer("name=ConnectionStrings:CobrArWeb"));
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-builder.Services.AddScoped<IProductService, CobrarWeb.Services.ProductService>();
+builder.Services.AddScoped<IProductService, CobrArWeb.Services.ProductService>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(10);
