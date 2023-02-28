@@ -26,6 +26,13 @@
                                 <input class="btn btn-lg btn-success btn-block" type="submit" value="Création">
                             </fieldset>
                         }
+
+                        @if (Model != null && !string.IsNullOrWhiteSpace(Model.ErrorText))
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                @Model.ErrorText
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

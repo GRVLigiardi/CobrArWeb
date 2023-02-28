@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@using CobrArWeb.Data;
+@model List<Product>
+
+<div class="text-center">
+    <div class="container">
+        <div class="row">
+
+            @foreach (var product in Model)
+            {
+                    <div class="col-md-4 col-md-offset-4">
+                        <div class="card" style="width: 18rem;">
+                              <div class="card-body">
+                                <h5 class="card-title">@product.Produit</h5>
+                                <p class="card-text">@product.Quantite item(s)</p>
+                                <a href="#" class="btn btn-primary">Buy it</a>
+                            </div>
+                        </div>
+                    </div>
+            }
+        </div>
+    </div>
+</div>

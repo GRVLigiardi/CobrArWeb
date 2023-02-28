@@ -1,5 +1,6 @@
 ﻿using CobrArWeb.Data;
 using CobrArWeb.Models;
+using CobrArWeb.Models.Views.Common;
 using CobrArWeb.Models.Views.Home;
 using CobrArWeb.Services;
 using CobrArWeb.Services.Interfaces;
@@ -27,14 +28,40 @@ namespace CobrArWeb.Controllers
             if (isAutheticated)
             {
                 HttpContext.Session.SetString("IsAuthenticated", loginVM.Email);
+                return RedirectToAction("Index");
             }
-
-            return RedirectToAction("Index");
+            else
+            {
+                return RedirectToAction("Index", new ErrorVM() { ErrorTag = "ERR_LOGIN", ErrorText = "Invalid login or password" });
+            }
         }
 
-        public IActionResult Index()
+        public IActionResult CreateUser(LoginVM loginVM)
         {
-            return View();
+            if (loginVM == null || string.IsNullOrWhiteSpace(loginVM.Email))
+            {
+                return View();
+            }
+            else
+            {
+                _authenticationService.CreateUser(loginVM.Email, loginVM.Password);
+                return RedirectToAction("Index");
+            }
+        }
+
+        public IActionResult Index(ErrorVM errorVM)
+        {
+            var isAuthenticated = HttpContext.Session.GetString("IsAuthenticated");
+            if (isAuthenticated != null)
+            {
+                ViewData["IsAuthenticated"] = true;
+            }
+            else
+            {
+                ViewData["IsAuthenticated"] = false;
+            }
+
+            return View(errorVM);
         }
 
         public IActionResult Privacy()
