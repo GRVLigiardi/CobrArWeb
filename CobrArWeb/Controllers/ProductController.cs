@@ -30,9 +30,17 @@ namespace CobrArWeb.Controllers
                 ViewData["IsAuthenticated"] = true;
 
                 // Charger toutes les catégories et sous-catégories associées de la base de données
-                var categories = _context.Categories
-                    .Include(c => c.SousCategories)
-                    .ToList();
+                var categories = _context.Products
+             .GroupBy(p => new { p.Categorie, p.SousCategorie })
+             .Select(g => new CategoryViewModel
+             {
+                 Categorie = g.Key.Categorie,
+                 SousCategorie = g.Key.SousCategorie,
+                 Produit = g.ToList()
+             })
+             .ToList();
+
+
 
                 // Créer une arborescence de catégories et sous-catégories pour afficher les produits
                 var categoryTree = new List<CategoryViewModel>();
@@ -40,27 +48,27 @@ namespace CobrArWeb.Controllers
                 {
                     var categoryViewModel = new CategoryViewModel
                     {
-                        Name = category.Name,
-                        Subcategories = new List<SubcategoryViewModel>()
+                        Produit = category.Produit,
+                        SousCategorie = new List<SousCategorieViewModel>()
                     };
 
-                    foreach (var subcategory in category.SousCategories)
+                    foreach (var subcategory in category.SousCategorie)
                     {
-                        var subcategoryViewModel = new SubcategoryViewModel
+                        var subcategoryViewModel = new SousCategorieViewModel
                         {
-                            Name = subcategory.Name,
+                            Name = subcategory.Produit,
                             Products = _context.Products
-                                .Where(p => p.SousCategorie == subcategory.Name)
+                                .Where(p => p.SousCategorie == subcategory.Produit)
                                 .ToList()
                         };
 
                         if (subcategoryViewModel.Products.Any())
                         {
-                            categoryViewModel.Subcategories.Add(subcategoryViewModel);
+                            categoryViewModel.SousCategorie.Add(subcategoryViewModel);
                         }
                     }
 
-                    if (categoryViewModel.Subcategories.Any())
+                    if (categoryViewModel.SousCategorie.Any())
                     {
                         categoryTree.Add(categoryViewModel);
                     }
