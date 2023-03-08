@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using CobrArWeb.Models;
+
 namespace CobrArWeb.Controllers
 {
     public class ProductController : Controller
@@ -28,18 +29,57 @@ namespace CobrArWeb.Controllers
             {
                 ViewData["IsAuthenticated"] = true;
 
-                var teams = _context.Teams
-                    .Include(t => t.Categories)
-                        .ThenInclude(c => c.SousCategories)
-                            .ThenInclude(s => s.Products)
+                // Charger toutes les catégories et sous-catégories associées de la base de données
+                var categories = _context.Categories
+                    .Include(c => c.SousCategories)
                     .ToList();
 
-                return View(teams);
+                // Créer une arborescence de catégories et sous-catégories pour afficher les produits
+                var categoryTree = new List<CategoryViewModel>();
+                foreach (var category in categories)
+                {
+                    var categoryViewModel = new CategoryViewModel
+                    {
+                        Name = category.Name,
+                        Subcategories = new List<SubcategoryViewModel>()
+                    };
+
+                    foreach (var subcategory in category.SousCategories)
+                    {
+                        var subcategoryViewModel = new SubcategoryViewModel
+                        {
+                            Name = subcategory.Name,
+                            Products = _context.Products
+                                .Where(p => p.SousCategorie == subcategory.Name)
+                                .ToList()
+                        };
+
+                        if (subcategoryViewModel.Products.Any())
+                        {
+                            categoryViewModel.Subcategories.Add(subcategoryViewModel);
+                        }
+                    }
+
+                    if (categoryViewModel.Subcategories.Any())
+                    {
+                        categoryTree.Add(categoryViewModel);
+                    }
+                }
+
+                return View(categoryTree);
             }
             else
             {
                 return RedirectToAction("Index", "Home");
             }
         }
+
+
+        public IActionResult ProductsBySubcategory(string subcategory)
+        {
+            var products = _context.Products.Where(p => p.SousCategorie == subcategory).ToList();
+            return View(products);
+        }
     }
 }
+

@@ -1,46 +1,31 @@
-﻿@model IEnumerable<CobrArWeb.Data.Product>
-@{
-    ViewData["Title"] = "Products";
-}
+﻿@model List<CobrArWeb.Data.Product>
 
-<h1>@ViewData["Title"]</h1>
-
-@if (Model.Count() > 0)
-{
-    <table>
-        <thead>
+<table>
+    <thead>
+        <tr>
+            <th>Code Barre</th>
+            <th>Produit</th>
+            <th>Catégorie</th>
+            <th>Sous-Catégorie</th>
+            <th>Taille</th>
+            <th>Quantité</th>
+            <th>Prix</th>
+            <th>Fournisseur</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
             <tr>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Category</th>
-                <th>Subcategory</th>
-                <th>Team</th>
+                <td>@product.CodeBarre</td>
+                <td>@product.Produit</td>
+                <td>@product.Categorie</td>
+                <td>@product.SousCategorie</td>
+                <td>@product.Taille</td>
+                <td>@product.Quantite</td>
+                <td>@product.Prix</td>
+                <td>@product.Fournisseur</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var product in Model)
-            {
-                @foreach (var category in product.SousCategories.Category.Team.Categories)
-                {
-                    @foreach (var subCategory in category.SousCategories)
-                    {
-                        if (subCategory.Products.Contains(product))
-                        {
-                            <tr>
-                                <td>@product.Name</td>
-                                <td>@product.Price</td>
-                                <td>@category.Name</td>
-                                <td>@subCategory.Name</td>
-                                <td>@category.Team.Name</td>
-                            </tr>
-                        }
-                    }
-                }
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No products found.</p>
-}
+        }
+    </tbody>
+</table>
