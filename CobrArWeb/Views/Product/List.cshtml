@@ -1,4 +1,10 @@
-﻿@model List<CobrArWeb.Data.Product>
+﻿@using CobrArWeb.Models.RechercheArbo;
+@model List<EquipeViewModel>
+@section scripts {
+    
+}
+
+
 
 <table>
     <thead>
@@ -14,18 +20,66 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var product in Model)
+        @foreach (var equipe in Model)
         {
             <tr>
-                <td>@product.CodeBarre</td>
-                <td>@product.Produit</td>
-                <td>@product.Categorie</td>
-                <td>@product.SousCategorie</td>
-                <td>@product.Taille</td>
-                <td>@product.Quantite</td>
-                <td>@product.Prix</td>
-                <td>@product.Fournisseur</td>
+                <td>@equipe.Equipe</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
+            @foreach (var category in equipe.Categorie)
+            {
+                <tr>
+                    <td></td>
+                    <td>@category.Categorie</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                @foreach (var souscategory in category.SousCategorie)
+                {
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>@souscategory.Name</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    @foreach (var product in souscategory.Products)
+                    {
+                        <tr>
+                            <td>@product.CodeBarre</td>
+                            <td>@product.Produit</td>
+                            <td>@product.Categorie</td>
+                            <td>@product.SousCategorie</td>
+                            <td>@product.Taille</td>
+                            <td>@product.Quantite</td>
+                            <td>@product.Prix</td>
+                            <td>@product.Fournisseur</td>
+                            <td>
+                                <button class="btn btn-primary" onclick="addToCart('@product.CodeBarre')">Ajouter au panier</button>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
         }
     </tbody>
 </table>
+<div id="cart">
+    <h2>Panier</h2>
+    <ul id="cart-items"></ul>
+</div>
+
+<script src="~/js/site.js" asp-append-version="true"></script>                    

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using CobrArWeb.Models;
+using CobrArWeb.Models.RechercheArbo;
 
 namespace CobrArWeb.Controllers
 {
@@ -29,60 +30,28 @@ namespace CobrArWeb.Controllers
             {
                 ViewData["IsAuthenticated"] = true;
 
-                // Charger toutes les catégories et sous-catégories associées de la base de données
-                var categories = _context.Products
-             .GroupBy(p => new { p.Categorie, p.SousCategorie })
-             .Select(g => new CategoryViewModel
-             {
-                 Categorie = g.Key.Categorie,
-                 SousCategorie = g.Key.SousCategorie,
-                 Produit = g.ToList()
-             })
-             .ToList();
-
-
-
-                // Créer une arborescence de catégories et sous-catégories pour afficher les produits
-                var categoryTree = new List<CategoryViewModel>();
-                foreach (var category in categories)
-                {
-                    var categoryViewModel = new CategoryViewModel
+                // Charger toutes les équipes de la base de données
+                var equipes = _context.Products
+                    .GroupBy(p => p.Equipe)
+                    .Select(g => new EquipeViewModel
                     {
-                        Produit = category.Produit,
-                        SousCategorie = new List<SousCategorieViewModel>()
-                    };
+                        Equipe = g.Key,
+                        Categorie = g.ToList().GroupBy(p => p.Categorie)
+                            .Select(gc => new CategoryViewModel
+                            {
+                                Categorie = gc.Key,
+                                SousCategorie = SousCategorieViewModel.Clean(gc.ToList(), new EquipeViewModel { Equipe = g.Key }),
+                            }).ToList(),
+                    }).ToList();
 
-                    foreach (var subcategory in category.SousCategorie)
-                    {
-                        var subcategoryViewModel = new SousCategorieViewModel
-                        {
-                            Name = subcategory.Produit,
-                            Products = _context.Products
-                                .Where(p => p.SousCategorie == subcategory.Produit)
-                                .ToList()
-                        };
-
-                        if (subcategoryViewModel.Products.Any())
-                        {
-                            categoryViewModel.SousCategorie.Add(subcategoryViewModel);
-                        }
-                    }
-
-                    if (categoryViewModel.SousCategorie.Any())
-                    {
-                        categoryTree.Add(categoryViewModel);
-                    }
-                }
-
-                return View(categoryTree);
+                return View(equipes);
             }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
+
+            return RedirectToAction("Index", "Home");
         }
 
 
+        // Ajouter bouton pour ajouter au panier
         public IActionResult ProductsBySubcategory(string subcategory)
         {
             var products = _context.Products.Where(p => p.SousCategorie == subcategory).ToList();
