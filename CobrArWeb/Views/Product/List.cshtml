@@ -68,8 +68,7 @@
                             <td>@product.Prix</td>
                             <td>@product.Fournisseur</td>
                             <td>
-                                <button class="btn btn-primary" onclick="addToCart('@product.CodeBarre')">Ajouter au panier</button>
-                            </td>
+                                <a asp-controller="cart" asp-action="buy" asp-route-id="@product.Id">Ajouter Au Panier</a>
                         </tr>
                     }
                 }
@@ -77,9 +76,6 @@
         }
     </tbody>
 </table>
-<div id="cart">
-    <h2>Panier</h2>
-    <ul id="cart-items"></ul>
-</div>
+
 
 <script src="~/js/site.js" asp-append-version="true"></script>                    

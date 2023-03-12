@@ -1,33 +1,94 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+﻿using CobrArWeb.Data;
+using CobrArWeb.Helpers;
+using CobrArWeb.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 
-public class CartController : Controller
+namespace CobrArWeb.Controllers
 {
-    public IActionResult AddToCart(string codeBarre)
+    [Route("cart")]
+    public class CartController : Controller
     {
-        // Vérifiez si la session de panier existe
-        if (HttpContext.Session.GetString("Cart") == null)
+        private readonly CobrArWebContext _context;
+
+        public CartController(CobrArWebContext context)
         {
-            // Si la session de panier n'existe pas, créez une nouvelle liste de produits
-            List<string> cart = new List<string>();
-            cart.Add(codeBarre);
-
-            // Ajoutez la liste de produits dans la session de panier
-            HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(cart));
-        }
-        else
-        {
-            // Si la session de panier existe, récupérez la liste de produits existants
-            List<string> cart = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("Cart"));
-
-            // Ajoutez le nouveau produit dans la liste de produits
-            cart.Add(codeBarre);
-
-            // Mettez à jour la session de panier
-            HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(cart));
+            _context = context;
         }
 
-        // Redirigez l'utilisateur vers la page de panier
-        return RedirectToAction("Cart", "Cart");
+        [Route("index")]
+        public IActionResult Index()
+        {
+            var cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+            ViewBag.cart = cart;
+            ViewBag.total = cart.Sum(item => item.Product.Prix * item.Quantite);
+            return View("Panier");
+        }
+
+        [Route("panier")]
+        public IActionResult Panier()
+        {
+            var cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+            ViewBag.cart = cart;
+            ViewBag.total = cart.Sum(item => item.Product.Prix * item.Quantite);
+            return View();
+        }
+
+        [Route("buy/{id}")]
+        public IActionResult Buy(int id)
+        {
+            Product product = _context.Products.FirstOrDefault(p => p.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            if (SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart") == null)
+            {
+                List<Item> cart = new List<Item>();
+                cart.Add(new Item { Product = product, Quantite = 1 });
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+            }
+            else
+            {
+                List<Item> cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+                int index = isExist(product.Id);
+                if (index != -1)
+                {
+                    cart[index].Quantite++;
+                }
+                else
+                {
+                    cart.Add(new Item { Product = product, Quantite = 1 });
+                }
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+            }
+            return RedirectToAction("Panier");
+        }
+
+        [Route("remove/{id}")]
+        public IActionResult Remove(int id)
+        {
+            List<Item> cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+            int index = isExist(id);
+            cart.RemoveAt(index);
+            SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+            return RedirectToAction("Panier");
+        }
+
+        private int isExist(int id)
+        {
+            List<Item> cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+            for (int i = 0; i < cart.Count; i++)
+            {
+                if (cart[i].Product.Id == id)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
     }
 }

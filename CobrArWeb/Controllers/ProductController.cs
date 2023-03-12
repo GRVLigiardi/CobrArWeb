@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using CobrArWeb.Data;
 using CobrArWeb.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
-using CobrArWeb.Models;
 using CobrArWeb.Models.RechercheArbo;
 
 namespace CobrArWeb.Controllers
@@ -46,8 +41,13 @@ namespace CobrArWeb.Controllers
 
                 return View(equipes);
             }
+            {
+                var product = new Product();
+                ViewBag.products = product.ToString();
+                return RedirectToAction("Index", "Home");
+            }
 
-            return RedirectToAction("Index", "Home");
+            
         }
 
 
