@@ -90,5 +90,44 @@ namespace CobrArWeb.Controllers
             return -1;
         }
 
+        [Route("increment/{id}")]
+        public IActionResult Increment(int id)
+        {
+            List<Item> cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+            int index = isExist(id);
+            if (index != -1)
+            {
+                cart[index].Quantite++;
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+            }
+            return RedirectToAction("Panier");
+        }
+
+        [Route("decrement/{id}")]
+        public IActionResult Decrement(int id)
+        {
+            List<Item> cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+            int index = isExist(id);
+            if (index != -1)
+            {
+                if (cart[index].Quantite > 1) // vérifier si la quantité est supérieure à 1
+                {
+                    cart[index].Quantite--;
+                    SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+                }
+                else // si la quantité est égale à 1, supprimer l'article
+                {
+                    cart.RemoveAt(index);
+                    SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+                }
+            }
+            return RedirectToAction("Panier");
+        }
+        public ActionResult MyAction()
+        {
+            ViewBag.cart = new List<Item>(); // initialiser la variable cart
+            // ajouter des éléments à la liste cart ici
+            return View();
+        }
     }
 }

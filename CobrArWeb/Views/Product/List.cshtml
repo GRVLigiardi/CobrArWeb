@@ -1,7 +1,86 @@
-﻿@using CobrArWeb.Models.RechercheArbo;
+﻿@*@using CobrArWeb.Models.RechercheArbo;
+@model List<CobrArWeb.Models.RechercheArbo.EquipeViewModel>
+
+<h1>Recherche d'arborescence</h1>
+
+@foreach (var equipe in Model)
+{
+    <h2>Equipe : @equipe.Equipe</h2>
+
+    <div>
+        <form asp-controller="Product" asp-action="Search" method="get">
+            <input type="hidden" name="equipe" value="@equipe.Equipe" />
+            <button type="submit">Voir tous les produits de l'équipe</button>
+        </form>
+    </div>
+
+    <div>
+        @foreach (var categorie in equipe.Categorie)
+        {
+            <button onclick="showCategories('@equipe.Equipe', '@categorie.Categorie')">Catégorie : @categorie.Categorie</button>
+
+            <div id="@($"souscategories-{equipe.Equipe}-{categorie.Categorie}")" style="display:none">
+                @foreach (var souscategorie in categorie.SousCategorie)
+                {
+                    <button onclick="showProducts('@equipe.Equipe', '@categorie.Categorie', '@souscategorie.Products')">@souscategorie.Products</button>
+                }
+            </div>
+        }
+    </div>
+
+    <div id="@($"produits-{equipe.Equipe}")"></div>
+
+    <hr />
+}
+
+<script>
+    function showCategories(equipe, categorie) {
+        // Récupérer l'élément div qui contiendra les sous-catégories
+        var divSousCategories = document.getElementById(`souscategories-${equipe}-${categorie}`);
+
+        // Si les sous-catégories ne sont pas déjà affichées
+        if (divSousCategories.style.display === "none") {
+            // Récupérer les sous-catégories correspondantes via une requête AJAX
+            $.ajax({
+                url: '@Url.Action("GetSousCategories", "Product")',
+                data: { equipe: equipe, categorie: categorie },
+                success: function (data) {
+                    // Ajouter les sous-catégories à la div correspondante
+                    divSousCategories.innerHTML = data;
+                }
+            });
+
+            // Afficher la div
+            divSousCategories.style.display = "block";
+        } else {
+            // Masquer la div
+            divSousCategories.style.display = "none";
+        }
+    }
+
+    function showProducts(equipe, categorie, souscategorie) {
+        // Récupérer l'élément div qui contiendra les produits
+        var divProduits = document.getElementById(`produits-${equipe}`);
+
+        // Récupérer les produits correspondants via une requête AJAX
+        $.ajax({
+            url: '@Url.Action("GetProducts", "Product")',
+            data: { equipe: equipe, categorie: categorie, souscategorie: souscategorie },
+            success: function (data) {
+                // Ajouter les produits à la div correspondante
+                divProduits.innerHTML = data;
+            }
+        });
+    }
+</script>
+*@
+
+
+
+@using CobrArWeb.Models.RechercheArbo;
 @model List<EquipeViewModel>
 @section scripts {
-    
+
 }
 
 
@@ -14,7 +93,7 @@
             <th>Catégorie</th>
             <th>Sous-Catégorie</th>
             <th>Taille</th>
-            <th>Quantité</th>
+            <th>Quantite</th>
             <th>Prix</th>
             <th>Fournisseur</th>
         </tr>
@@ -78,4 +157,4 @@
 </table>
 
 
-<script src="~/js/site.js" asp-append-version="true"></script>                    
+<script src="~/js/site.js" asp-append-version="true"></script>       

@@ -57,6 +57,21 @@ namespace CobrArWeb.Controllers
             var products = _context.Products.Where(p => p.SousCategorie == subcategory).ToList();
             return View(products);
         }
+
+        public IActionResult RechercheArbo(string equipe)
+        {
+            var viewModel = new EquipeViewModel();
+            viewModel.Equipe = equipe;
+            var produits = _context.Products.Where(p => p.Equipe == equipe).ToList();
+            var categories = produits.GroupBy(p => p.Categorie).Select(g => new CategoryViewModel
+            {
+                Categorie = g.Key,
+                SousCategorie = SousCategorieViewModel.Clean(g.ToList(), viewModel)
+            }).ToList();
+            viewModel.Categorie = categories;
+            return View(viewModel);
+        }
+
     }
 }
 
