@@ -1,5 +1,6 @@
 html {
   font-size: 14px;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
 }
 
 @media (min-width: 768px) {
@@ -21,4 +22,216 @@ html {
 
 body {
   margin-bottom: 60px;
+  background-image:url(/Images/Backgrounds/cobrarlogogrey.png);
+  background-color:antiquewhite;
 }
+
+
+
+button{
+    font-family:Britannic;
+}
+
+
+#central-button {
+    background-color: yellow;
+    color: blue;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+    #central-button:hover {
+        background-color: blue;
+        color: yellow;
+        
+    }
+
+#newells-button {
+    background-color: red;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+    #newells-button:hover {
+        background-color: black;
+        color: red;
+    }
+
+#boca-button {
+    background-color: mediumblue;
+    color: yellow;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+    #boca-button:hover {
+        background-color: yellow;
+        color: black;
+    }
+
+#river-button {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+    #river-button:hover {
+        background-color: whitesmoke;
+        color: red;
+    }
+
+#sanlorenzo-button {
+    background-color: indianred;
+    color: darkblue;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+    #sanlorenzo-button:hover {
+        background-color: darkblue;
+        color: red;
+    }
+
+
+#independiente-button {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+    #independiente-button:hover {
+        background-color: whitesmoke;
+        color: red;
+    }
+
+#racing-button {
+    background-color: cornflowerblue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+    #racing-button:hover {
+        background-color: whitesmoke;
+        color: dodgerblue;
+    }
+
+#afa-button {
+    background-color: dodgerblue;
+    color: floralwhite;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+    #afa-button:hover {
+        background-color: deepskyblue;
+        color: yellow;
+    }
+
+#otros-button {
+    background-color: green;
+    color: floralwhite;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+    #otros-button:hover {
+        background-color: yellowgreen;
+        color: black;
+    }
+
+    #clear-button{
+        background-color: black;
+        color: floralwhite;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+#clear-button:hover {
+    background-color: black;
+    color: yellow;
+}
+

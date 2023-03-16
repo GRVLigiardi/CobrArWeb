@@ -1,4 +1,5 @@
 ﻿
+using CobrArWeb.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CobrArWeb.Data
@@ -12,7 +13,7 @@ namespace CobrArWeb.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
-
+        public DbSet<Ventes> Ventes { get; set; }
 
 
     }

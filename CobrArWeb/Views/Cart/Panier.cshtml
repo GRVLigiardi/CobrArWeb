@@ -7,6 +7,21 @@
 
 <div class="col-md-4">
     <h3>Panier</h3>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
     <table cellpadding="2" cellspacing="2" border="1">
         <tr>
             <th>Supr</th>
@@ -39,7 +54,11 @@
     </table>
     <br>
     <a asp-controller="Product" asp-action="List">Continuer vos achats</a>
+    <form asp-controller="Cart" asp-action="Checkout" method="post">
+        <button type="submit" class="btn btn-primary">Valider le panier</button>
+    </form>
 </div>
 </div>
+
 
 <script src="~/js/site.js" asp-append-version="true"></script>

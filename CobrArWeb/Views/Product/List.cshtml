@@ -1,83 +1,4 @@
-﻿@*@using CobrArWeb.Models.RechercheArbo;
-@model List<CobrArWeb.Models.RechercheArbo.EquipeViewModel>
-
-<h1>Recherche d'arborescence</h1>
-
-@foreach (var equipe in Model)
-{
-    <h2>Equipe : @equipe.Equipe</h2>
-
-    <div>
-        <form asp-controller="Product" asp-action="Search" method="get">
-            <input type="hidden" name="equipe" value="@equipe.Equipe" />
-            <button type="submit">Voir tous les produits de l'équipe</button>
-        </form>
-    </div>
-
-    <div>
-        @foreach (var categorie in equipe.Categorie)
-        {
-            <button onclick="showCategories('@equipe.Equipe', '@categorie.Categorie')">Catégorie : @categorie.Categorie</button>
-
-            <div id="@($"souscategories-{equipe.Equipe}-{categorie.Categorie}")" style="display:none">
-                @foreach (var souscategorie in categorie.SousCategorie)
-                {
-                    <button onclick="showProducts('@equipe.Equipe', '@categorie.Categorie', '@souscategorie.Products')">@souscategorie.Products</button>
-                }
-            </div>
-        }
-    </div>
-
-    <div id="@($"produits-{equipe.Equipe}")"></div>
-
-    <hr />
-}
-
-<script>
-    function showCategories(equipe, categorie) {
-        // Récupérer l'élément div qui contiendra les sous-catégories
-        var divSousCategories = document.getElementById(`souscategories-${equipe}-${categorie}`);
-
-        // Si les sous-catégories ne sont pas déjà affichées
-        if (divSousCategories.style.display === "none") {
-            // Récupérer les sous-catégories correspondantes via une requête AJAX
-            $.ajax({
-                url: '@Url.Action("GetSousCategories", "Product")',
-                data: { equipe: equipe, categorie: categorie },
-                success: function (data) {
-                    // Ajouter les sous-catégories à la div correspondante
-                    divSousCategories.innerHTML = data;
-                }
-            });
-
-            // Afficher la div
-            divSousCategories.style.display = "block";
-        } else {
-            // Masquer la div
-            divSousCategories.style.display = "none";
-        }
-    }
-
-    function showProducts(equipe, categorie, souscategorie) {
-        // Récupérer l'élément div qui contiendra les produits
-        var divProduits = document.getElementById(`produits-${equipe}`);
-
-        // Récupérer les produits correspondants via une requête AJAX
-        $.ajax({
-            url: '@Url.Action("GetProducts", "Product")',
-            data: { equipe: equipe, categorie: categorie, souscategorie: souscategorie },
-            success: function (data) {
-                // Ajouter les produits à la div correspondante
-                divProduits.innerHTML = data;
-            }
-        });
-    }
-</script>
-*@
-
-
-
-@using CobrArWeb.Models.RechercheArbo;
+﻿@using CobrArWeb.Models.RechercheArbo;
 @model List<EquipeViewModel>
 @section scripts {
 
@@ -85,9 +6,10 @@
 
 
 
-<table>
+<table id="product-table">
     <thead>
         <tr>
+            <th>Equipe</th>
             <th>Code Barre</th>
             <th>Produit</th>
             <th>Catégorie</th>
@@ -101,51 +23,22 @@
     <tbody>
         @foreach (var equipe in Model)
         {
-            <tr>
-                <td>@equipe.Equipe</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
             @foreach (var category in equipe.Categorie)
             {
-                <tr>
-                    <td></td>
-                    <td>@category.Categorie</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
                 @foreach (var souscategory in category.SousCategorie)
                 {
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>@souscategory.Name</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
                     @foreach (var product in souscategory.Products)
                     {
-                        <tr>
+                        <tr class="table-responsive-md">
+                            <td>@equipe.Equipe</td>
                             <td>@product.CodeBarre</td>
                             <td>@product.Produit</td>
-                            <td>@product.Categorie</td>
-                            <td>@product.SousCategorie</td>
-                            <td>@product.Taille</td>
+                            <td>@category.Categorie</td>
+                            <td>@souscategory.Name</td>
+                            <td>@product.Taille</td>                 
                             <td>@product.Quantite</td>
                             <td>@product.Prix</td>
-                            <td>@product.Fournisseur</td>
+                           <td>@product.Fournisseur</td>
                             <td>
                                 <a asp-controller="cart" asp-action="buy" asp-route-id="@product.Id">Ajouter Au Panier</a>
                         </tr>
@@ -153,6 +46,28 @@
                 }
             }
         }
+        <div class="team-buttons">
+            <button id="central-button" class="FirstStepSearch">Rosario Central</button>
+            <button id="newells-button">Newell's Old Boys</button>
+            <button id="boca-button">Boca Juniors</button>
+            <button id="river-button">River Plate</button>
+            <button id="sanlorenzo-button">San Lorenzo</button>
+            <button id="independiente-button">Independiente</button>
+            <button id="racing-button">Racing Club</button>
+            <button id="afa-button">Selection Argentine</button>
+            <button id="otros-button">Otros</button>
+            <button id="clear-button">X</button>           
+        </div>
+
+         <div class="cat-buttons">
+            <button id="maillot-button">Maillots</button>
+            <button id="textile-button">Textile</button>
+            <button id="bazar-button">Bazar</button>
+            <button id="ballons-button">Ballons</button>
+            <button id="bebes-button">Bebe</button>
+            <button id="ecole-button">Ecole</button>      
+        </div>
+
     </tbody>
 </table>
 

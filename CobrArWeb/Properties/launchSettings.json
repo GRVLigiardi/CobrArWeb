@@ -16,7 +16,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": ""
+      "applicationUrl": "",
+      "nativeDebugging": true
     },
     "IIS Express": {
       "commandName": "IISExpress",

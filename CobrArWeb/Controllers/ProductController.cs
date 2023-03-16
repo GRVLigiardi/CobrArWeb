@@ -2,6 +2,7 @@
 using CobrArWeb.Data;
 using CobrArWeb.Services.Interfaces;
 using CobrArWeb.Models.RechercheArbo;
+using CobrArWeb.Helpers;
 
 namespace CobrArWeb.Controllers
 {
@@ -47,7 +48,7 @@ namespace CobrArWeb.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            
+
         }
 
 
@@ -58,19 +59,16 @@ namespace CobrArWeb.Controllers
             return View(products);
         }
 
-        public IActionResult RechercheArbo(string equipe)
+        [HttpGet]
+        public IActionResult ProductsByTeam(string teamId)
         {
-            var viewModel = new EquipeViewModel();
-            viewModel.Equipe = equipe;
-            var produits = _context.Products.Where(p => p.Equipe == equipe).ToList();
-            var categories = produits.GroupBy(p => p.Categorie).Select(g => new CategoryViewModel
-            {
-                Categorie = g.Key,
-                SousCategorie = SousCategorieViewModel.Clean(g.ToList(), viewModel)
-            }).ToList();
-            viewModel.Categorie = categories;
-            return View(viewModel);
+            var products = _context.Products
+                .Where(p => p.Equipe == teamId)
+                .ToList();
+
+            return Json(products);
         }
+    
 
     }
 }

@@ -1,9 +1,11 @@
-﻿using CobrArWeb.Data;
+﻿using System;
+using CobrArWeb.Data;
 using CobrArWeb.Helpers;
 using CobrArWeb.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace CobrArWeb.Controllers
 {
@@ -20,7 +22,7 @@ namespace CobrArWeb.Controllers
         [Route("index")]
         public IActionResult Index()
         {
-            var cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+            var cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart") ?? new List<Item>();
             ViewBag.cart = cart;
             ViewBag.total = cart.Sum(item => item.Product.Prix * item.Quantite);
             return View("Panier");
@@ -29,7 +31,7 @@ namespace CobrArWeb.Controllers
         [Route("panier")]
         public IActionResult Panier()
         {
-            var cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+            var cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart") ?? new List<Item>();
             ViewBag.cart = cart;
             ViewBag.total = cart.Sum(item => item.Product.Prix * item.Quantite);
             return View();
@@ -115,7 +117,7 @@ namespace CobrArWeb.Controllers
                     cart[index].Quantite--;
                     SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
                 }
-                else // si la quantité est égale à 1, supprimer l'article
+                else 
                 {
                     cart.RemoveAt(index);
                     SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
@@ -125,9 +127,52 @@ namespace CobrArWeb.Controllers
         }
         public ActionResult MyAction()
         {
-            ViewBag.cart = new List<Item>(); // initialiser la variable cart
-            // ajouter des éléments à la liste cart ici
+            ViewBag.cart = new List<Item>(); 
             return View();
+        }
+
+        [Route("checkout")]
+        public IActionResult Checkout()
+        {
+            List<Item> cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+            if (cart == null || cart.Count == 0)
+            {
+                return RedirectToAction("Panier");
+            }
+
+            // Begin a transaction
+            using (IDbContextTransaction transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    // Loop through cart items and update the product quantity in the database
+                    foreach (Item item in cart)
+                    {
+                        Product product = _context.Products.FirstOrDefault(p => p.Id == item.Product.Id);
+                        if (product != null)
+                        {
+                            product.Quantite -= item.Quantite; // Decrease the quantity
+                            _context.Entry(product).State = EntityState.Modified; // Mark the product as modified
+                        }
+                    }
+
+                    // Save the changes and commit the transaction
+                    _context.SaveChanges();
+                    transaction.Commit();
+
+                    // Clear the cart session after a successful checkout
+                    SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", null);
+                    TempData["SuccessMessage"] = "Le panier a été validé avec succès.";
+                }
+                catch (Exception ex)
+                {
+                    // Rollback the transaction in case of any error
+                    transaction.Rollback();
+                    TempData["ErrorMessage"] = "Une erreur est survenue lors de la validation du panier. Veuillez réessayer.";
+                }
+            }
+
+            return RedirectToAction("Panier");
         }
     }
 }
