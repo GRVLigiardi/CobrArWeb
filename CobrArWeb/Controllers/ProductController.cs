@@ -3,6 +3,7 @@ using CobrArWeb.Data;
 using CobrArWeb.Services.Interfaces;
 using CobrArWeb.Models.RechercheArbo;
 using CobrArWeb.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace CobrArWeb.Controllers
 {
@@ -68,8 +69,81 @@ namespace CobrArWeb.Controllers
 
             return Json(products);
         }
-    
+        public IActionResult Index()
+        {
+            var products = _context.Products.ToList();
+            return View("Stock", products);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Products.Add(product);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(product);
+        }
+
+        public IActionResult Edit(int id)
+        {
+            var product = _context.Products.Find(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Product product)
+        {
+            if (id != product.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(product);
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.Products.Any(e => e.Id == id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(product);
+        }
+
+        public IActionResult Stock()
+        {
+            // Initialiser le modèle (par exemple, une liste de produits)
+            var products = _context.Products.ToList();
+
+            // Passer le modèle à la vue
+            return View(products);
+        }
 
     }
-}
+            }
 

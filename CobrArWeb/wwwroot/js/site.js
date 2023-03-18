@@ -11,6 +11,11 @@
     const otrosButton = document.getElementById('otros-button');
     const clearButton = document.getElementById('clear-button');
 
+
+
+
+
+
     bocaButton.addEventListener('click', () => filterTableByCategory('BOJ Boca Juniors'));
     riverButton.addEventListener('click', () => filterTableByCategory('RPL River Plate'));
     centralButton.addEventListener('click', () => filterTableByCategory('RCT Rosario Central'));
@@ -45,3 +50,22 @@
     }
 });
 
+$(document).ready(function () {
+    $("#CategoryId").change(function () {
+        var categoryId = $(this).val();
+        $.ajax({
+            url: "/Product/GetSubCategories",
+            type: "POST",
+            data: { categoryId: categoryId },
+            success: function (data) {
+                $("#SubCategoryId").empty();
+                $.each(data, function (index, item) {
+                    $("#SubCategoryId").append($('<option>', {
+                        value: item.id,
+                        text: item.name
+                    }));
+                });
+            }
+        });
+    });
+});

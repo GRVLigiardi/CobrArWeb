@@ -1,0 +1,35 @@
+﻿@model List<CobrArWeb.Data.Ventes>
+
+<h2>Caisse</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date et heure</th>
+            <th>Produit</th>
+            <th>Quantité</th>
+            <th>Prix</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vente in Model)
+        {
+            <tr>
+                <td>@vente.Date.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@vente.Product.Produit</td>
+                <td>@vente.Quantity</td>
+                <td>@(vente.Product.Prix.HasValue ? (vente.Product.Prix.Value * vente.Quantity) : 0) €</td>
+            </tr>
+        }
+    </tbody>
+   @{
+    decimal total = Model.Sum(vente => vente.Product.Prix.HasValue ? (vente.Product.Prix.Value * vente.Quantity) : 0);
+}
+
+    <tfoot>
+        <tr>
+            <td colspan="3" style="text-align: right;"><strong>Total :</strong></td>
+            <td><strong>@total €</strong></td>
+        </tr>
+    </tfoot>
+</table>

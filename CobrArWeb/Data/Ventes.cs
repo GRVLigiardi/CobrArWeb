@@ -1,8 +1,7 @@
-﻿using CobrArWeb.Data;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace CobrArWeb.Models.Ventes
+namespace CobrArWeb.Data
 {
     public class Ventes
     {

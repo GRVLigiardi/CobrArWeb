@@ -5,7 +5,8 @@ using CobrArWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Http;
+using CobrArWeb.Extensions;
 
 namespace CobrArWeb.Controllers
 {
@@ -134,45 +135,79 @@ namespace CobrArWeb.Controllers
         [Route("checkout")]
         public IActionResult Checkout()
         {
+            // Récupérez le panier de la session
             List<Item> cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+
             if (cart == null || cart.Count == 0)
             {
+                TempData["ErrorMessage"] = "Votre panier est vide.";
                 return RedirectToAction("Panier");
             }
 
-            // Begin a transaction
+            // Commencez une transaction
             using (IDbContextTransaction transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    // Loop through cart items and update the product quantity in the database
+                    // Parcourez les articles du panier et mettez à jour la quantité du produit dans la base de données
                     foreach (Item item in cart)
                     {
-                        Product product = _context.Products.FirstOrDefault(p => p.Id == item.Product.Id);
-                        if (product != null)
+                        Product product = _context.Products.SingleOrDefault(p => p.Id == item.Product.Id);
+
+                        if (product == null)
                         {
-                            product.Quantite -= item.Quantite; // Decrease the quantity
-                            _context.Entry(product).State = EntityState.Modified; // Mark the product as modified
+                            TempData["ErrorMessage"] = $"Le produit avec l'ID {item.Product.Id} n'a pas été trouvé.";
+                            return RedirectToAction("Panier");
                         }
+
+                        if (product.Quantite < item.Quantite)
+                        {
+                            TempData["ErrorMessage"] = $"Il n'y a pas assez de stock pour le produit {product.Produit}.";
+                            return RedirectToAction("Panier");
+                        }
+
+                        // Mettez à jour la quantité du produit
+                        product.Quantite -= item.Quantite;
+
+                        // Enregistrez la vente
+                        Ventes vente = new Ventes
+                        {
+                            Date = DateTime.Now,
+                            ProductId = item.Product.Id,
+                  
+                            Quantity = item.Quantite
+                        };
+                        _context.Ventes.Add(vente);
                     }
 
-                    // Save the changes and commit the transaction
+                    // Enregistrez les modifications et validez la transaction
                     _context.SaveChanges();
                     transaction.Commit();
 
-                    // Clear the cart session after a successful checkout
-                    SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", null);
-                    TempData["SuccessMessage"] = "Le panier a été validé avec succès.";
+                    // Videz le panier et mettez à jour la session
+                    cart.Clear();
+                    HttpContext.Session.Set("cart", cart);
+
+                    TempData["SuccessMessage"] = "Votre commande a été passée avec succès.";
                 }
                 catch (Exception ex)
                 {
-                    // Rollback the transaction in case of any error
+                    // Annulez la transaction en cas d'erreur
                     transaction.Rollback();
-                    TempData["ErrorMessage"] = "Une erreur est survenue lors de la validation du panier. Veuillez réessayer.";
+
+                    TempData["ErrorMessage"] = $"Une erreur s'est produite lors de la validation de votre commande: {ex.Message}";
                 }
             }
 
             return RedirectToAction("Panier");
         }
+
+        [Route("caisse")]
+        public IActionResult Caisse()
+        {
+            var ventes = _context.Ventes.Include(v => v.Product).OrderByDescending(v => v.Date).ToList();
+            return View(ventes);
+        }
+
     }
 }
