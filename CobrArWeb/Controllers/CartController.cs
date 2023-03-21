@@ -70,6 +70,7 @@ namespace CobrArWeb.Controllers
             return RedirectToAction("Panier");
         }
 
+
         [Route("remove/{id}")]
         public IActionResult Remove(int id)
         {
@@ -174,7 +175,15 @@ namespace CobrArWeb.Controllers
                         {
                             Date = DateTime.Now,
                             ProductId = item.Product.Id,
-                  
+                            CodeBarre = item.Product.CodeBarre,
+                            Produit = item.Product.Produit,
+                            Categorie = item.Product.Categorie,
+                            SousCategorie = item.Product.SousCategorie,
+                            Equipe = item.Product.Equipe,
+                            Taille = item.Product.Taille,
+                            Quantite = item.Product.Quantite,
+                            Prix = item.Product.Prix,
+                            Fournisseur = item.Product.Fournisseur,
                             Quantity = item.Quantite
                         };
                         _context.Ventes.Add(vente);
@@ -207,6 +216,16 @@ namespace CobrArWeb.Controllers
         {
             var ventes = _context.Ventes.Include(v => v.Product).OrderByDescending(v => v.Date).ToList();
             return View(ventes);
+        }
+
+
+        [HttpGet("panierpartial")]
+        public IActionResult PanierPartial()
+        {
+            var cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart") ?? new List<Item>();
+            ViewBag.cart = cart;
+            ViewBag.total = cart.Sum(item => item.Product.Prix * item.Quantite);
+            return PartialView("_PanierPartial");
         }
 
     }

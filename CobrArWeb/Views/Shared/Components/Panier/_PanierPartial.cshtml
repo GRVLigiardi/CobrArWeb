@@ -1,0 +1,58 @@
+﻿@using CobrArWeb.Models.RechercheArbo;
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+    }
+
+    <table class="panier-container" cellpadding="2" cellspacing="2" border="1">
+        <tr>
+            <th>Supr</th>
+            <th>Id</th>
+            <th>Produit</th>
+            <th>Prix</th>
+            <th>Quantite</th>
+            <th>-/+</th>
+            <th>SubTotal</th>
+        </tr>
+
+        @foreach (var item in ViewBag.cart)
+        {
+            <tr>
+                <td><a asp-controller="cart" asp-action="remove" asp-route-id="@item.Product.Id">X</a></td>
+                <td>@item.Product.Id</td>
+                <td>@item.Product.Produit</td>
+                <td>@item.Product.Prix</td>
+                <td>@item.Quantite</td>
+                <td><a asp-controller="cart" asp-action="decrement" asp-route-id="@item.Product.Id">-</a></td>
+                <td><a asp-controller="cart" asp-action="increment" asp-route-id="@item.Product.Id">+</a></td>
+                <td>@(item.Product.Prix * item.Quantite)</td>
+            </tr>
+        }
+        <tr>
+            <td align="right" colspan="6">TOTAL </td>
+            <td>
+                @ViewBag.total
+            </td>
+        </tr>
+    </table>
+   
+    <a asp-controller="Product" asp-action="List">Continuer vos achats</a>
+    <form asp-controller="Cart" asp-action="Checkout" method="post">
+        <button type="submit" class="btn btn-primary">Valider le panier</button>
+    </form>
+</div>
+</div>
+
+
+<script src="~/js/site.js" asp-append-version="true"></script>

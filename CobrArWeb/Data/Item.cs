@@ -5,5 +5,7 @@
         public Product Product { get; set; }
 
         public int Quantite { get; set; }
+
+
     }
 }

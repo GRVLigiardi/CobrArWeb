@@ -1,0 +1,55 @@
+﻿@model CobrArWeb.Data.Product
+
+<h2>Edit Product</h2>
+
+<form asp-action="EditProduct" method="post">
+    <input type="hidden" asp-for="Id" /> 
+    <div class="form-group">
+        <label asp-for="CodeBarre" class="control-label"></label>
+        <input asp-for="CodeBarre" class="form-control" />
+        <span asp-validation-for="CodeBarre" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Produit" class="control-label"></label>
+        <input asp-for="Produit" class="form-control" />
+        <span asp-validation-for="Produit" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Categorie" class="control-label"></label>
+        <input asp-for="Categorie" class="form-control" />
+        <span asp-validation-for="Categorie" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SousCategorie" class="control-label"></label>
+        <input asp-for="SousCategorie" class="form-control" />
+        <span asp-validation-for="SousCategorie" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Equipe" class="control-label"></label>
+        <input asp-for="Equipe" class="form-control" />
+        <span asp-validation-for="Equipe" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Taille" class="control-label"></label>
+        <input asp-for="Taille" class="form-control" />
+        <span asp-validation-for="Taille" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Quantite" class="control-label"></label>
+        <input asp-for="Quantite" class="form-control" />
+        <span asp-validation-for="Quantite" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Prix" class="control-label"></label>
+        <input asp-for="Prix" class="form-control" />
+        <span asp-validation-for="Prix" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Fournisseur" class="control-label"></label>
+        <input asp-for="Fournisseur" class="form-control" />
+        <span asp-validation-for="Fournisseur" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Valider" class="btn btn-primary" />
+    </div>
+</form>

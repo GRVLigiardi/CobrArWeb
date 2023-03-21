@@ -6,6 +6,7 @@
     <thead>
         <tr>
             <th>Date et heure</th>
+            <th>Equipe</th>
             <th>Produit</th>
             <th>Quantité</th>
             <th>Prix</th>
@@ -16,14 +17,15 @@
         {
             <tr>
                 <td>@vente.Date.ToString("dd/MM/yyyy HH:mm")</td>
-                <td>@vente.Product.Produit</td>
+                <td>@vente.Equipe</td>
+                <td>@vente.Produit</td>
                 <td>@vente.Quantity</td>
                 <td>@(vente.Product.Prix.HasValue ? (vente.Product.Prix.Value * vente.Quantity) : 0) €</td>
             </tr>
         }
     </tbody>
    @{
-    decimal total = Model.Sum(vente => vente.Product.Prix.HasValue ? (vente.Product.Prix.Value * vente.Quantity) : 0);
+        decimal total = Model.Sum(vente => vente.Product.Prix.HasValue ? (vente.Product.Prix.Value * vente.Quantity) : 0);
 }
 
     <tfoot>

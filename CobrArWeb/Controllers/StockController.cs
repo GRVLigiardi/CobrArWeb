@@ -1,10 +1,10 @@
 ﻿using CobrArWeb.Data;
-using CobrArWeb.Models.Stock;
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using CobrArWeb.Models.Stock;
+
+
 using CobrArWeb.Models;
+using CobrArWeb.Models.Stock;
 
 namespace CobrArWeb.Controllers
 {
@@ -30,36 +30,39 @@ namespace CobrArWeb.Controllers
             };
             return View("Stock", viewModel);
         }
-
-        public IActionResult AddProduct()
+        public IActionResult Edit(int id)
         {
-            var equipeList = _context.Equipes.Select(e => e.Nom).ToList();
-            var categorieList = _context.Categories.Select(c => c.Nom).ToList();
-            var fournisseurList = _context.Fournisseurs.Select(f => f.Nom).ToList();
-            var viewModel = new AddProductViewModel();
+            var product = _context.Products.Find(id);
 
-            // Récupérer toutes les équipes
-            viewModel.Equipes = (IEnumerable<string>)_context.Equipes.ToList();
-
-            // Récupérer toutes les catégories
-            viewModel.Categories = (IEnumerable<string>)_context.Categories.ToList();
-
-            // Récupérer tous les fournisseurs
-            viewModel.Fournisseurs = (IEnumerable<string>)_context.Fournisseurs.ToList();
-
-            return View(viewModel);
-        }
-        [HttpPost]
-        public IActionResult AddProduct(Product product)
-        {
-            if (ModelState.IsValid)
+            if (product == null)
             {
-                _context.Products.Add(product);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+                return NotFound();
             }
 
-            return View(product);
+            return View("EditProduct", product);
+        }
+
+        [HttpPost]
+        public IActionResult EditProduct(Product product)
+        {
+            // Vérifier si l'ID du produit existe déjà dans la base de données
+            var existingProduct = _context.Products.Find(product.Id);
+
+            if (existingProduct != null)
+            {
+                // Mettre à jour le produit existant dans la base de données
+                _context.Entry(existingProduct).CurrentValues.SetValues(product);
+            }
+            else
+            {
+                // Ajouter le nouveau produit à la base de données
+                _context.Products.Add(product);
+            }
+
+            _context.SaveChanges();
+
+            // Rediriger vers la vue "Stock.cshtml" après l'édition
+            return RedirectToAction("Index");
         }
     }
 }

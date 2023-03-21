@@ -1,4 +1,5 @@
-﻿@model CobrArWeb.Models.Stock.StockViewModel
+﻿@using CobrArWeb.Data;
+@model CobrArWeb.Models.Stock.StockViewModel
 
 @section scripts {
     <script>
@@ -8,123 +9,7 @@
 
 <h2>Stock</h2>
 
-<!-- Bouton pour ouvrir le modal de création de produits -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createProductModal">
-    Ajouter un produit
-</button>
-
-<!-- Modal de création de produits -->
-<div class="modal fade" id="createProductModal" tabindex="-1" role="dialog" aria-labelledby="createProductModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form asp-controller="Stock" asp-action="CreateProduct">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createProductModalLabel">Ajouter un produit</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="CategoryId">Catégorie</label>
-                        <select class="form-control" id="CategoryId" name="CategoryId" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))">
-                            <option value="">-- Sélectionner une catégorie --</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="SubCategoryId">Sous-catégorie</label>
-                        <select class="form-control" id="SubCategoryId" name="SubCategoryId">
-                            <option value="">-- Sélectionner une sous-catégorie --</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="FournisseurId">Fournisseur</label>
-                        <select class="form-control" id="FournisseurId" name="FournisseurId" asp-items="@(new SelectList(Model.Fournisseurs, "Id", "Nom"))">
-                            <option value="">-- Sélectionner un fournisseur --</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="Equipe">Équipe</label>
-                        <select class="form-control" id="Equipe" name="Equipe" asp-items="@(new SelectList(Model.Equipes))">
-                            <option value="">-- Sélectionner une équipe --</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="Produit">Produit</label>
-                        <input type="text" class="form-control" id="Produit" name="Produit" placeholder="Nom du produit">
-                    </div>
-                    <div class="form-group">
-                        <label for="Quantite">Quantité</label>
-                        <select class="form-control" id="Quantite" name="Quantite" placeholder="Quantite">
-                            <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="editProductModalLabel">Modifier le produit</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-            </form>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form id="editProductForm">
-                                                <input type="hidden" id="editProductId" name="Id" />
-                                                <div class="form-group">
-                                                    <label for="editProductName">Nom</label>
-                                                    <input type="text" class="form-control" id="editProductName" name="Name" required />
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="editProductPrice">Prix</label>
-                                                    <input type="number" class="form-control" id="editProductPrice" name="Price" required />
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="editProductQuantity">Quantité</label>
-                                                    <input type="number" class="form-control" id="editProductQuantity" name="Quantity" required />
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="editProductCategory">Catégorie</label>
-                                                    <select class="form-control" id="editProductCategory" name="Category" required>
-                                                        <option value="">Sélectionnez une catégorie</option>
-                                                        @foreach (var category in Model.Categories)
-                                                        {
-                                                            <option value="@category.Id">@category.Name</option>
-                                                        }
-                                                    </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="editProductSubcategory">Sous-catégorie</label>
-                                                    <select class="form-control" id="editProductSubcategory" name="Subcategory" required>
-                                                        <option value="">Sélectionnez une sous-catégorie</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="editProductSupplier">Fournisseur</label>
-                                                    <select class="form-control" id="editProductSupplier" name="Supplier" required>
-                                                        <option value="">Sélectionnez un fournisseur</option>
-                                                        @foreach (var supplier in Model.Suppliers)
-                                                        {
-                                                            <option value="@supplier.Id">@supplier.Name</option>
-                                                        }
-                                                    </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="editProductSize">Taille</label>
-                                                    <select class="form-control" id="editProductSize" name="Size" required>
-                                                        <option value="">Sélectionnez une taille</option>
-                                                        <option value="XS">XS</option>
-                                                        <option value="S">S</option>
-                                                        <option value="M">M</option>
-                                                        <option value="L">L</option>
-                                                        <option value="XL">XL</option>
-                                                        <option value="XXL">XXL</option>
-                                                    </select>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                            <button type="button" class="btn btn-primary" onclick="submitProductForm()">Enregistrer</button>
-                                        </div>
+                                       
 
  <div class="team-buttons">
             <button id="central-button" class="FirstStepSearch">Rosario Central</button>
@@ -167,9 +52,7 @@
                 <td>@product.Prix</td>
                 <td>@product.Quantite</td>
                 <td>
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editProductModal" onclick="populateEditModal(@product.Id, '@product.Produit', @product.Prix, @product.Quantite)">
-                        Modifier
-                    </button>
+                     <a asp-controller="Stock" asp-action="Edit" asp-route-id="@product.Id">Modifier</a>
                 </td>
             </tr>
         }

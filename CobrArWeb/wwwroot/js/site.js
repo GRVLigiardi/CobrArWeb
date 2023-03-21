@@ -50,22 +50,3 @@
     }
 });
 
-$(document).ready(function () {
-    $("#CategoryId").change(function () {
-        var categoryId = $(this).val();
-        $.ajax({
-            url: "/Product/GetSubCategories",
-            type: "POST",
-            data: { categoryId: categoryId },
-            success: function (data) {
-                $("#SubCategoryId").empty();
-                $.each(data, function (index, item) {
-                    $("#SubCategoryId").append($('<option>', {
-                        value: item.id,
-                        text: item.name
-                    }));
-                });
-            }
-        });
-    });
-});
