@@ -4,6 +4,7 @@ using CobrArWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CobrArWeb.Migrations
 {
     [DbContext(typeof(CobrArWebContext))]
-    partial class CobrArWebContextModelSnapshot : ModelSnapshot
+    [Migration("20230323182248_LiaisonsTables")]
+    partial class LiaisonsTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,14 +84,29 @@ namespace CobrArWeb.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Categorie")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("CategorieId")
                         .HasColumnType("int");
+
+                    b.Property<string>("CodeBarre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Equipe")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("EquipeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FournisseurId")
+                    b.Property<string>("Fournisseur")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FournisseurId")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("Prix")
@@ -101,11 +119,17 @@ namespace CobrArWeb.Migrations
                     b.Property<int?>("Quantite")
                         .HasColumnType("int");
 
+                    b.Property<string>("SousCategorie")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("SousCategorieId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TailleId")
-                        .IsRequired()
+                    b.Property<string>("Taille")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TailleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -117,8 +141,6 @@ namespace CobrArWeb.Migrations
                     b.HasIndex("FournisseurId");
 
                     b.HasIndex("SousCategorieId");
-
-                    b.HasIndex("TailleId");
 
                     b.ToTable("Products");
                 });
@@ -196,6 +218,7 @@ namespace CobrArWeb.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CodeBarre")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Date")
@@ -206,6 +229,7 @@ namespace CobrArWeb.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Fournisseur")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Prix")
@@ -229,6 +253,7 @@ namespace CobrArWeb.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Taille")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -240,45 +265,29 @@ namespace CobrArWeb.Migrations
 
             modelBuilder.Entity("CobrArWeb.Data.Product", b =>
                 {
-                    b.HasOne("CobrArWeb.Data.Categorie", "Categorie")
+                    b.HasOne("CobrArWeb.Data.Categorie", null)
                         .WithMany("Products")
                         .HasForeignKey("CategorieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CobrArWeb.Data.Equipe", "Equipe")
+                    b.HasOne("CobrArWeb.Data.Equipe", null)
                         .WithMany("Products")
                         .HasForeignKey("EquipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CobrArWeb.Data.Fournisseur", "Fournisseur")
+                    b.HasOne("CobrArWeb.Data.Fournisseur", null)
                         .WithMany("Products")
                         .HasForeignKey("FournisseurId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CobrArWeb.Data.SousCategorie", "SousCategorie")
+                    b.HasOne("CobrArWeb.Data.SousCategorie", null)
                         .WithMany("Products")
                         .HasForeignKey("SousCategorieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("CobrArWeb.Data.Taille", "Taille")
-                        .WithMany("Products")
-                        .HasForeignKey("TailleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Categorie");
-
-                    b.Navigation("Equipe");
-
-                    b.Navigation("Fournisseur");
-
-                    b.Navigation("SousCategorie");
-
-                    b.Navigation("Taille");
                 });
 
             modelBuilder.Entity("CobrArWeb.Data.SousCategorie", b =>
@@ -319,11 +328,6 @@ namespace CobrArWeb.Migrations
                 });
 
             modelBuilder.Entity("CobrArWeb.Data.SousCategorie", b =>
-                {
-                    b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("CobrArWeb.Data.Taille", b =>
                 {
                     b.Navigation("Products");
                 });

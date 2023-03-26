@@ -3,18 +3,63 @@
 @model List<EquipeViewModel>
 @section scripts {
 
+
+
 }
-
-
 
 <div class="container">
     <div class="row">
+        <div class="col-md-4">
+            <div class="team-buttons">
+                <div class="team-buttons">
+                    <button id="central-button" data-team-id="1">Rosario Central</button>
+                    <button id="boca-button" data-team-id="2">Boca Juniors</button>
+                    <button id="newells-button" data-team-id="3">Newell's Old Boys</button>
+                    <button id="river-button" data-team-id="4">River Plate</button>
+                    <button id="sanlorenzo-button" data-team-id="5">San Lorenzo</button>
+                    <button id="independiente-button" data-team-id="6">Independiente</button>
+                    <button id="racing-button" data-team-id="7">Racing Club</button>
+                    <button id="afa-button" data-team-id="8">Selection Argentine</button>
+                    <button id="otros-button" data-team-id="9">Otros</button>
+                    <button id="clear-button">X</button>
+                </div>
+            </div>
+            <div class="cat-buttons">
+                <div class="cat-buttons">
+                    <button id="maillot-button" data-category-id="1">Maillots</button>
+                    <button id="textile-button" data-category-id="2">Textile</button>
+                    <button id="bazar-button" data-category-id="3">Bazar</button>
+                    <button id="ballons-button" data-category-id="4">Ballons</button>
+                    <button id="bebes-button" data-category-id="5">Bebe</button>
+                    <button id="ecole-button" data-category-id="6">Ecole</button>
+                </div>
+            </div>
+            <div class="subcat-buttons">
+                <div class="subcat-buttons">
+                    <select>
+                        <option value="">Toutes les sous-catégories</option>
+                        @foreach (var equipe in Model)
+                        {
+                            foreach (var category in equipe.Categorie)
+                            {
+                                foreach (var subCategory in category.SousCategorie)
+                                {
+                                    <option value="@subCategory.Id">@subCategory.Name</option>
+                                }
+                            }
+                        }
+                    </select>
+
+                </div>
+            </div>
+        </div>
+
+
         <div class="col-md-8">
 <table id="product-table">
     <thead>
         <tr>
             <th>Equipe</th>
- 
             <th>Produit</th>
             <th>Catégorie</th>
             <th>Sous-Catégorie</th>
@@ -24,6 +69,8 @@
             <th>Fournisseur</th>
         </tr>
     </thead>
+
+
     <tbody>
         @foreach (var equipe in Model)
         {
@@ -33,16 +80,15 @@
                 {
                     @foreach (var product in souscategory.Products)
                     {
-                        <tr class="table-responsive-md">
+                                    <tr class="table-responsive-md" data-team-id="@product.EquipeId" data-category-id="@product.CategorieId" data-sub-category-id="@product.SousCategorieId" data-sub-category-name="@product.SousCategorie.Nom">
                             <td>@equipe.Equipe</td>
-                        
                             <td>@product.Produit</td>
                             <td>@category.Categorie</td>
                             <td>@souscategory.Name</td>
-                            <td>@product.Taille</td>                 
+                            <td>@product.Taille.Nom</td>                 
                             <td>@product.Quantite</td>
                             <td>@product.Prix</td>
-                           <td>@product.Fournisseur</td>
+                           <td>@product.Fournisseur.Nom</td>
                             <td>
                            <a asp-controller="cart" asp-action="buy" asp-route-id="@product.Id" asp-route-redirectToPanier="false">Ajouter Au Panier</a>
 
@@ -51,35 +97,12 @@
                 }
             }
         }
-        <div class="team-buttons">
-            <button id="central-button" class="FirstStepSearch">Rosario Central</button>
-            <button id="newells-button">Newell's Old Boys</button>
-            <button id="boca-button">Boca Juniors</button>
-            <button id="river-button">River Plate</button>
-            <button id="sanlorenzo-button">San Lorenzo</button>
-            <button id="independiente-button">Independiente</button>
-            <button id="racing-button">Racing Club</button>
-            <button id="afa-button">Selection Argentine</button>
-            <button id="otros-button">Otros</button>
-            <button id="clear-button">X</button>           
-        </div>
-
-         <div class="cat-buttons">
-            <button id="maillot-button">Maillots</button>
-            <button id="textile-button">Textile</button>
-            <button id="bazar-button">Bazar</button>
-            <button id="ballons-button">Ballons</button>
-            <button id="bebes-button">Bebe</button>
-            <button id="ecole-button">Ecole</button>      
-        </div>
                     <div class="panier-container">
                         @await Component.InvokeAsync("Panier")
                     </div>
         </div>
     </div>
-
-    </tbody>
-</table>
+</div>
 
 
 <script src="~/js/site.js" asp-append-version="true"></script>       

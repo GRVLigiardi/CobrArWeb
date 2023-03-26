@@ -1,5 +1,4 @@
-﻿
-using CobrArWeb.Models;
+﻿using CobrArWeb.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CobrArWeb.Data

@@ -1,52 +1,63 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
-    const table = document.getElementById('product-table');
-    const bocaButton = document.getElementById('boca-button');
-    const riverButton = document.getElementById('river-button');
-    const centralButton = document.getElementById('central-button');
-    const newellsButton = document.getElementById('newells-button');
-    const sanlorenzoButton = document.getElementById('sanlorenzo-button');
-    const independienteButton = document.getElementById('independiente-button');
-    const racingButton = document.getElementById('racing-button');
-    const afaButton = document.getElementById('afa-button');
-    const otrosButton = document.getElementById('otros-button');
-    const clearButton = document.getElementById('clear-button');
+﻿let mySelectedTeamId = null;
+let mySelectedCategoryId = 'clear';
 
+function filterRows() {
+    let rows = document.querySelectorAll('#product-table tbody tr');
+    rows.forEach(function (row) {
+        let shouldDisplay = (row.dataset.teamId === mySelectedTeamId || mySelectedTeamId === 'clear') &&
+            (row.dataset.categoryId === mySelectedCategoryId || mySelectedCategoryId === 'clear');
+        row.style.display = shouldDisplay ? '' : 'none';
+    });
+}
 
-
-
-
-
-    bocaButton.addEventListener('click', () => filterTableByCategory('BOJ Boca Juniors'));
-    riverButton.addEventListener('click', () => filterTableByCategory('RPL River Plate'));
-    centralButton.addEventListener('click', () => filterTableByCategory('RCT Rosario Central'));
-    newellsButton.addEventListener('click', () => filterTableByCategory('NOB Newells Old Boys'));
-    sanlorenzoButton.addEventListener('click', () => filterTableByCategory('SLO San Lorenzo'));
-    independienteButton.addEventListener('click', () => filterTableByCategory('CAI Independiente'));
-    racingButton.addEventListener('click', () => filterTableByCategory('RAC Racing'));
-    afaButton.addEventListener('click', () => filterTableByCategory('AFA Selección Argentina'));
-    otrosButton.addEventListener('click', () => filterTableByCategory('OTR Otros'));
-    clearButton.addEventListener('click', clearFilter); 
-
-
-    function filterTableByCategory(category) {
-        const rows = table.getElementsByTagName('tr');
-        for (let i = 0; i < rows.length; i++) {
-            const categoryCell = rows[i].getElementsByTagName('td')[0];
-            if (categoryCell) {
-                const categoryValue = categoryCell.textContent.trim().toLowerCase();
-                if (categoryValue !== category.toLowerCase()) {
-                    rows[i].style.display = 'none';
-                } else {
-                    rows[i].style.display = '';
-                }
-            }
-        }
-    }
-    function clearFilter() {
-        const rows = table.getElementsByTagName('tr');
-        for (let i = 0; i < rows.length; i++) {
-            rows[i].style.display = '';
-        }
-    }
+document.querySelectorAll('.team-buttons button').forEach(function (button) {
+    button.addEventListener('click', function () {
+        mySelectedTeamId = this.dataset.teamId;
+        filterRows();
+    });
 });
 
+document.querySelectorAll('.cat-buttons button').forEach(function (button) {
+    button.addEventListener('click', function () {
+        mySelectedCategoryId = this.dataset.categoryId;
+        updateSubCategories(mySelectedCategoryId);
+        filterRows();
+    });
+});
+
+function updateSubCategories(categoryId) {
+    let rows = document.querySelectorAll('#product-table tbody tr');
+    let subCatSelect = document.querySelector('.subcat-buttons select');
+
+    // Clear the select element
+    subCatSelect.innerHTML = '<option value="">Toutes les sous-catégories</option>';
+
+    // Loop through the products and add the subcategories to the select element
+    rows.forEach(function (row) {
+        if (row.dataset.categoryId === categoryId || categoryId === 'clear') {
+            let subCatId = row.dataset.subCategoryId;
+            let subCatName = row.dataset.subCategoryName;
+
+            // Check if the sub-category is already in the select element
+            let existingSubCat = subCatSelect.querySelector(`[value="${subCatId}"]`);
+            if (!existingSubCat) {
+                let subCatOption = document.createElement('option');
+                subCatOption.value = subCatId;
+                subCatOption.textContent = subCatName;
+                subCatSelect.appendChild(subCatOption);
+            }
+        }
+    });
+}
+
+document.querySelector('.subcat-buttons select').addEventListener('change', function () {
+    let mySelectedSubCategoryId = this.value;
+    let rows = document.querySelectorAll('#product-table tbody tr');
+    rows.forEach(function (row) {
+        if (row.dataset.subCategoryId === mySelectedSubCategoryId || mySelectedSubCategoryId === '') {
+            row.style.display = (row.dataset.teamId === mySelectedTeamId || mySelectedTeamId === 'clear') ? '' : 'none';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});

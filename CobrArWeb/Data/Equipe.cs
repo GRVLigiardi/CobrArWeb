@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace CobrArWeb.Data
 {
@@ -9,5 +10,7 @@ namespace CobrArWeb.Data
 
         [Required]
         public string Nom { get; set; }
+
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

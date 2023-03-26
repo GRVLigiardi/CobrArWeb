@@ -17,7 +17,7 @@ namespace CobrArWeb.Data
 
         public virtual Product Product { get; set; }
 
-        public string CodeBarre { get; set; }
+        public string? CodeBarre { get; set; }
 
         public string Produit { get; set; }
 
@@ -27,12 +27,12 @@ namespace CobrArWeb.Data
 
         public string Equipe { get; set; }
 
-        public string Taille { get; set; }
+        public string? Taille { get; set; }
 
         public int? Quantite { get; set; }
 
         public decimal? Prix { get; set; }
 
-        public string Fournisseur { get; set; }
+        public string? Fournisseur { get; set; }
     }
 }

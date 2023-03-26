@@ -27,18 +27,19 @@ namespace CobrArWeb.Controllers
             {
                 ViewData["IsAuthenticated"] = true;
 
-                // Charger toutes les équipes de la base de données
                 var equipes = _context.Products
-                    .GroupBy(p => p.Equipe)
+                    .Include(p => p.Equipe) 
+                    .Include(p => p.Categorie) 
+                    .Include(p => p.SousCategorie) 
+                    .Include(p => p.Taille)
+                    .Include(p => p.Fournisseur)
+                    .GroupBy(p => p.Equipe.Nom)
+                 
+
                     .Select(g => new EquipeViewModel
                     {
                         Equipe = g.Key,
-                        Categorie = g.ToList().GroupBy(p => p.Categorie)
-                            .Select(gc => new CategoryViewModel
-                            {
-                                Categorie = gc.Key,
-                                SousCategorie = SousCategorieViewModel.Clean(gc.ToList(), new EquipeViewModel { Equipe = g.Key }),
-                            }).ToList(),
+                        Categorie = g.ToList().GroupBy(p => p.Categorie.Nom).Select(gc => new CategoryViewModel { Categorie = gc.Key, SousCategorie = SousCategorieViewModel.Clean(gc.ToList(), new EquipeViewModel { Equipe = g.Key }) }).ToList(),
                     }).ToList();
 
                 return View(equipes);
@@ -48,15 +49,16 @@ namespace CobrArWeb.Controllers
                 ViewBag.products = product.ToString();
                 return RedirectToAction("Index", "Home");
             }
+        
 
 
-        }
+    }
 
 
         // Ajouter bouton pour ajouter au panier
         public IActionResult ProductsBySubcategory(string subcategory)
         {
-            var products = _context.Products.Where(p => p.SousCategorie == subcategory).ToList();
+            var products = _context.Products.Where(p => p.SousCategorie.Nom == subcategory).ToList();
             return View(products);
         }
 
@@ -64,7 +66,7 @@ namespace CobrArWeb.Controllers
         public IActionResult ProductsByTeam(string teamId)
         {
             var products = _context.Products
-                .Where(p => p.Equipe == teamId)
+                .Where(p => p.Equipe.Nom == teamId)
                 .ToList();
 
             return Json(products);
@@ -80,60 +82,6 @@ namespace CobrArWeb.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Products.Add(product);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(product);
-        }
-
-        public IActionResult Edit(int id)
-        {
-            var product = _context.Products.Find(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Product product)
-        {
-            if (id != product.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(product);
-                    _context.SaveChanges();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Products.Any(e => e.Id == id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(product);
-        }
 
         public IActionResult Stock()
         {
@@ -142,6 +90,21 @@ namespace CobrArWeb.Controllers
 
             // Passer le modèle à la vue
             return View(products);
+        }
+
+        [HttpGet]
+        public IActionResult FilteredProducts(string team, string category)
+        {
+            var filteredProducts = _context.Products
+                .Include(p => p.Equipe)
+                .Include(p => p.Categorie)
+                .Include(p => p.SousCategorie)
+                .Include(p => p.Taille)
+                .Include(p => p.Fournisseur)
+                .Where(p => p.Equipe.Nom == team && p.Categorie.Nom == category)
+                .ToList();
+
+            return PartialView("ProductListPartialList", filteredProducts);
         }
 
     }

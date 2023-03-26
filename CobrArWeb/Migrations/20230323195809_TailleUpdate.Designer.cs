@@ -4,6 +4,7 @@ using CobrArWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CobrArWeb.Migrations
 {
     [DbContext(typeof(CobrArWebContext))]
-    partial class CobrArWebContextModelSnapshot : ModelSnapshot
+    [Migration("20230323195809_TailleUpdate")]
+    partial class TailleUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,6 +87,10 @@ namespace CobrArWeb.Migrations
                     b.Property<int>("CategorieId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CodeBarre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("EquipeId")
                         .HasColumnType("int");
 
@@ -104,8 +111,7 @@ namespace CobrArWeb.Migrations
                     b.Property<int>("SousCategorieId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TailleId")
-                        .IsRequired()
+                    b.Property<int>("TailleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -196,6 +202,7 @@ namespace CobrArWeb.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CodeBarre")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Date")
@@ -206,6 +213,7 @@ namespace CobrArWeb.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Fournisseur")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Prix")
@@ -229,6 +237,7 @@ namespace CobrArWeb.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Taille")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -265,7 +274,7 @@ namespace CobrArWeb.Migrations
                         .IsRequired();
 
                     b.HasOne("CobrArWeb.Data.Taille", "Taille")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("TailleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -319,11 +328,6 @@ namespace CobrArWeb.Migrations
                 });
 
             modelBuilder.Entity("CobrArWeb.Data.SousCategorie", b =>
-                {
-                    b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("CobrArWeb.Data.Taille", b =>
                 {
                     b.Navigation("Products");
                 });

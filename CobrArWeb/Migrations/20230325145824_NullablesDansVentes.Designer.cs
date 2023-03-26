@@ -4,6 +4,7 @@ using CobrArWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CobrArWeb.Migrations
 {
     [DbContext(typeof(CobrArWebContext))]
-    partial class CobrArWebContextModelSnapshot : ModelSnapshot
+    [Migration("20230325145824_NullablesDansVentes")]
+    partial class NullablesDansVentes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,7 +268,7 @@ namespace CobrArWeb.Migrations
                         .IsRequired();
 
                     b.HasOne("CobrArWeb.Data.Taille", "Taille")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("TailleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -319,11 +322,6 @@ namespace CobrArWeb.Migrations
                 });
 
             modelBuilder.Entity("CobrArWeb.Data.SousCategorie", b =>
-                {
-                    b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("CobrArWeb.Data.Taille", b =>
                 {
                     b.Navigation("Products");
                 });

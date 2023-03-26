@@ -1,63 +1,78 @@
 ﻿@using CobrArWeb.Data;
-@model CobrArWeb.Models.Stock.StockViewModel
+@using CobrArWeb.Models.Stock;
+@model StockViewModel
 
 @section scripts {
-    <script>
-  
-    </script>
+
 }
 
-<h2>Stock</h2>
 
-                                       
 
- <div class="team-buttons">
-            <button id="central-button" class="FirstStepSearch">Rosario Central</button>
-            <button id="newells-button">Newell's Old Boys</button>
-            <button id="boca-button">Boca Juniors</button>
-            <button id="river-button">River Plate</button>
-            <button id="sanlorenzo-button">San Lorenzo</button>
-            <button id="independiente-button">Independiente</button>
-            <button id="racing-button">Racing Club</button>
-            <button id="afa-button">Selection Argentine</button>
-            <button id="otros-button">Otros</button>
-            <button id="clear-button">X</button>           
+<div class="team-buttons">
+    <button id="central-button" class="FirstStepSearch">Rosario Central</button>
+    <button id="newells-button">Newell's Old Boys</button>
+    <button id="boca-button">Boca Juniors</button>
+    <button id="river-button">River Plate</button>
+    <button id="sanlorenzo-button">San Lorenzo</button>
+    <button id="independiente-button">Independiente</button>
+    <button id="racing-button">Racing Club</button>
+    <button id="afa-button">Selection Argentine</button>
+    <button id="otros-button">Otros</button>
+    <button id="clear-button">X</button>
+</div>
+
+
+<div class="cat-buttons">
+    <button id="maillot-button">Maillots</button>
+    <button id="textile-button">Textile</button>
+    <button id="bazar-button">Bazar</button>
+    <button id="ballons-button">Ballons</button>
+    <button id="bebes-button">Bebe</button>
+    <button id="ecole-button">Ecole</button>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table id="team-table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            
+
+                            <th>Taille</th>
+                            <th>Quantite</th>
+                            <th>Prix</th>
+                            <th>Modifier</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var equipe in Model.Equipes)
+                        {
+                            <tr>
+                                
+                                <td colspan="6">
+                                    <table class="table table-bordered table-striped">
+                                        @foreach (var product in equipe.Products)
+                                        {
+                                            <tr>
+                                                <td>@product.Equipe.Nom</td>
+                                                <td>@product.Produit</td>
+                                                <td>@product.Taille.Nom</td>
+                                                <td>@product.Quantite</td>
+                                                <td>@product.Prix</td>
+                                                <td>
+                                                    <a asp-controller="Stock" asp-action="Edit" asp-route-id="@product.Id">Modifier</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
-
-         <div class="cat-buttons">
-            <button id="maillot-button">Maillots</button>
-            <button id="textile-button">Textile</button>
-            <button id="bazar-button">Bazar</button>
-            <button id="ballons-button">Ballons</button>
-            <button id="bebes-button">Bebe</button>
-            <button id="ecole-button">Ecole</button>      
-        </div>
-
-<table class="table" id="product-table">
-    <thead>
-        <tr>
-            <th>Equipe</th>
-            <th>Nom</th>
-            <th>Prix</th>
-            <th>Quantité</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var product in Model.Products)
-        {
-            <tr>
-                <td>@product.Equipe</td>
-                <td>@product.Produit</td>
-                <td>@product.Prix</td>
-                <td>@product.Quantite</td>
-                <td>
-                     <a asp-controller="Stock" asp-action="Edit" asp-route-id="@product.Id">Modifier</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-
-<script src="~/js/site.js" asp-append-version="true"></script>
+    </div>
+</div>

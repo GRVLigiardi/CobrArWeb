@@ -255,12 +255,14 @@ button{
 }
 
 .panier-container {
-    /* Ajoutez vos styles pour le panier ici */
-    height:100px;
-    width:100px;
-    background-color:whitesmoke;
-    position: fixed; /* Cette propriété fixe le panier à un emplacement spécifique sur la page */
-    top: 100px; /* Position verticale du panier */
-    right: 100px; /* Position horizontale du panier */
-    z-index: 1000; /* Cette propriété garantit que le panier apparaît au-dessus des autres éléments */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+col
+
+
+.valider {
+    margin-top: 20px;
 }

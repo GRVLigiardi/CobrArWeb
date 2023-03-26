@@ -41,7 +41,14 @@ namespace CobrArWeb.Controllers
         [Route("buy/{id}")]
         public IActionResult Buy(int id)
         {
-            Product product = _context.Products.FirstOrDefault(p => p.Id == id);
+            Product product = _context.Products
+                .Include(p => p.Equipe)
+                .Include(p => p.Categorie)
+                .Include(p => p.SousCategorie)
+                .Include(p => p.Taille)
+                .Include(p => p.Fournisseur)
+                .FirstOrDefault(p => p.Id == id);
+
             if (product == null)
             {
                 return NotFound();
@@ -67,7 +74,7 @@ namespace CobrArWeb.Controllers
                 }
                 SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             }
-            return RedirectToAction("Panier");
+            return RedirectToAction("List", "Product");
         }
 
 
@@ -175,15 +182,15 @@ namespace CobrArWeb.Controllers
                         {
                             Date = DateTime.Now,
                             ProductId = item.Product.Id,
-                            CodeBarre = item.Product.CodeBarre,
+                            
                             Produit = item.Product.Produit,
-                            Categorie = item.Product.Categorie,
-                            SousCategorie = item.Product.SousCategorie,
-                            Equipe = item.Product.Equipe,
-                            Taille = item.Product.Taille,
+                            Categorie = item.Product.Categorie.Nom,
+                            SousCategorie = item.Product.SousCategorie.Nom,
+                            Equipe = item.Product.Equipe.Nom,
+                            Taille = item.Product.Taille.Nom,
                             Quantite = item.Product.Quantite,
                             Prix = item.Product.Prix,
-                            Fournisseur = item.Product.Fournisseur,
+                            Fournisseur = item.Product.Fournisseur.Nom,
                             Quantity = item.Quantite
                         };
                         _context.Ventes.Add(vente);
@@ -195,7 +202,7 @@ namespace CobrArWeb.Controllers
 
                     // Videz le panier et mettez à jour la session
                     cart.Clear();
-                    HttpContext.Session.Set("cart", cart);
+                    SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart); // Utilisez SetObjectAsJson
 
                     TempData["SuccessMessage"] = "Votre commande a été passée avec succès.";
                 }

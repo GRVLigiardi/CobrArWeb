@@ -2,19 +2,21 @@ using Microsoft.EntityFrameworkCore;
 using CobrArWeb.Services;
 using CobrArWeb.Data;
 using CobrArWeb.Services.Interfaces;
-using CobrArWeb.Services.Interfaces;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
 builder.Services.AddDbContext<CobrArWebContext>(item => item.UseSqlServer("name=ConnectionStrings:CobrArWeb"));
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IProductService, CobrArWeb.Services.ProductService>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(10);
-
 });
 
 var app = builder.Build();
