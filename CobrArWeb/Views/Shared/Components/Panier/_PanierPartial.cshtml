@@ -1,5 +1,7 @@
 ﻿@using CobrArWeb.Models.RechercheArbo;
 
+
+
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success">
@@ -45,11 +47,15 @@
                 @ViewBag.total
             </td>
 </tr>
-    <div class="valider">        
-        
+    <div class="valider">
+
         <form asp-controller="Cart" asp-action="Checkout" method="post">
             <button type="submit" class="btn btn-primary">Valider le panier</button>
         </form>
+        </tr>
+</table>
+    </div>
+        </div>
         </tr>
     </table>
     </div>

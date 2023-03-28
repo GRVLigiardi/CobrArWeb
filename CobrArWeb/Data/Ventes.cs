@@ -34,5 +34,10 @@ namespace CobrArWeb.Data
         public decimal? Prix { get; set; }
 
         public string? Fournisseur { get; set; }
+
+        public int MDPId { get; set; }
+        public virtual MDP MDP { get; set; }
+
+
     }
 }

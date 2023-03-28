@@ -19,5 +19,7 @@ namespace CobrArWeb.Data
         public DbSet<Fournisseur> Fournisseurs { get; set; }
         public DbSet<Taille> Tailles { get; set; }
 
+        public DbSet<MDP> MDPs { get; set; }
+
     }
 }

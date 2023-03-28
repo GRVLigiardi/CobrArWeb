@@ -30,5 +30,6 @@ namespace CobrArWeb.Data
         [ForeignKey("Fournisseur")]
         public int? FournisseurId { get; set; }
         public virtual Fournisseur Fournisseur { get; set; }
-    }
+
+        }
 }

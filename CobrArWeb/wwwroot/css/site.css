@@ -22,6 +22,7 @@ html {
 }
 
 body {
+    margin-left:0px;
     margin-bottom: 60px;
     background-color: antiquewhite;
 }
@@ -38,10 +39,41 @@ body {
         z-index: -1;
     }
 
+.team-buttons,
+.cat-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
 
+.button {
+    width: 100%;
+}
 
+.products-window,
+.cart-window {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 20px;
+}
 
+#product-table th {
+    text-align: center;
+    vertical-align: middle;
+}
 
+#product-table td {
+    vertical-align: middle;
+}
+
+#product-table tbody tr {
+    cursor: pointer;
+}
+
+.team-buttons, .cat-buttons, .subcat-buttons {
+    overflow: hidden;
+}
 button{
     font-family:Britannic;
 
@@ -254,13 +286,35 @@ button{
     color: yellow;
 }
 
+.products-window {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.cart-window {
+    background: none;
+    padding: 1%;
+    border-radius: 5px;
+    position: fixed;
+    top: 10%;
+    right: 1%;
+    width: 30%;
+}
+
+.no-padding {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+
 .panier-container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-col
 
 
 .valider {

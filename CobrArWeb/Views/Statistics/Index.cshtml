@@ -1,0 +1,53 @@
+﻿@model CobrArWeb.Models.StatistiquesVentesModel
+@{
+    ViewData["Title"] = "Statistiques des ventes";
+}
+
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total des ventes</h5>
+                    <p class="card-text">@Model.TotalVentes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Revenu total</h5>
+                    <p class="card-text">@Model.TotalRevenue.ToString("C")</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Equipe la plus vendue</h5>
+                    <p class="card-text">@Model.EquipeLaPlusVendue</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Horaire avec le plus de ventes</h5>
+                    <p class="card-text">@Model.HorairePlusDeVentes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Mois avec le plus de ventes</h5>
+                    <p class="card-text">@Model.MoisPlusDeVentes</p>
+                </div>
+            </div>
+        </div>
+        <!-- Ajoutez d'autres cartes pour d'autres statistiques si nécessaire -->
+    </div>
+</div>

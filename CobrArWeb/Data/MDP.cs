@@ -1,8 +1,8 @@
 ﻿namespace CobrArWeb.Data
 {
-    public class ModeDePaiment
+    public class MDP
     {
-        public int Id { get; set; }
+    public int Id { get; set; }
         public string Nom { get; set; }
     }
 }

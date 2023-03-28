@@ -1,12 +1,18 @@
-﻿let mySelectedTeamId = null;
-let mySelectedCategoryId = 'clear';
+﻿function init() {
+    let mySelectedTeamId = null;
+    let mySelectedCategoryId = 'clear';
 
 function filterRows() {
     let rows = document.querySelectorAll('#product-table tbody tr');
     rows.forEach(function (row) {
         let shouldDisplay = (row.dataset.teamId === mySelectedTeamId || mySelectedTeamId === 'clear') &&
             (row.dataset.categoryId === mySelectedCategoryId || mySelectedCategoryId === 'clear');
-        row.style.display = shouldDisplay ? '' : 'none';
+        // Vérifiez si une équipe et une catégorie sont sélectionnées
+        if (mySelectedTeamId !== 'clear' && mySelectedCategoryId !== 'clear') {
+            row.style.display = shouldDisplay ? '' : 'none';
+        } else {
+            row.style.display = 'none';
+        }
     });
 }
 
@@ -61,3 +67,38 @@ document.querySelector('.subcat-buttons select').addEventListener('change', func
         }
     });
 });
+// Désactivez initialement les boutons de catégorie
+let catButtons = document.querySelectorAll('.cat-buttons button');
+catButtons.forEach(function (button) {
+    button.disabled = true;
+});
+
+// Activez les boutons de catégorie lorsque l'utilisateur choisit une équipe
+document.querySelectorAll('.team-buttons button').forEach(function (button) {
+    button.addEventListener('click', function () {
+        mySelectedTeamId = this.dataset.teamId;
+        catButtons.forEach(function (catButton) {
+            catButton.disabled = false;
+        });
+        // Réinitialiser la sélection de la catégorie et cacher tous les produits
+        mySelectedCategoryId = 'clear';
+        filterRows();
+    });
+});
+
+// Lorsqu'une catégorie est sélectionnée, affichez les produits correspondants
+document.querySelectorAll('.cat-buttons button').forEach(function (button) {
+    button.addEventListener('click', function () {
+        mySelectedCategoryId = this.dataset.categoryId;
+        updateSubCategories(mySelectedCategoryId);
+        filterRows();
+    });
+});
+
+// Cachez initialement tous les produits
+    filterRows();
+}
+
+
+document.addEventListener('DOMContentLoaded', init);
+

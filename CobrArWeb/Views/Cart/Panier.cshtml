@@ -25,7 +25,7 @@
     <table cellpadding="2" cellspacing="2" border="1">
         <tr>
             <th>Supr</th>
-            <th>Id</th>
+        
             <th>Produit</th>
             <th>Prix</th>
             <th>Quantite</th>
@@ -36,7 +36,7 @@
         {
             <tr>
                 <td><a asp-controller="cart" asp-action="remove" asp-route-id="@item.Product.Id">X</a></td>
-                <td>@item.Product.Id</td>
+               
                 <td>@item.Product.Produit</td>
                 <td>@item.Product.Prix</td>
                 <td>@item.Quantite</td>
@@ -52,10 +52,39 @@
             </td>
            </tr>
     </table>
-   
+    <div class="valider">
+
+        <form asp-controller="Cart" asp-action="ContinueShopping" method="post">
+            <button type="submit" class="btn btn-primary">Continuer</button>
+        </form>
+        <form asp-controller="Cart" asp-action="Checkout" method="post">
+            <input type="hidden" name="modeDePaiementId" value="1" />
+            <button type="submit" class="btn btn-primary">Cash</button>
+        </form>
+        <form asp-controller="Cart" asp-action="Checkout" method="post">
+            <input type="hidden" name="modeDePaiementId" value="2" />
+            <button type="submit" class="btn btn-primary">Carte de Débit</button>
+        </form>
+        <form asp-controller="Cart" asp-action="Checkout" method="post">
+            <input type="hidden" name="modeDePaiementId" value="3" />
+            <button type="submit" class="btn btn-primary">Carte de Crédit</button>
+        </form>
+        <form asp-controller="Cart" asp-action="Checkout" method="post">
+            <input type="hidden" name="modeDePaiementId" value="4" />
+            <button type="submit" class="btn btn-primary">Carte Cadeau</button>
+        </form>
+        <form asp-controller="Cart" asp-action="Checkout" method="post">
+            <input type="hidden" name="modeDePaiementId" value="5" />
+            <button type="submit" class="btn btn-primary">Échange</button>
+        </form>
+        <form asp-controller="Cart" asp-action="Checkout" method="post">
+            <input type="hidden" name="modeDePaiementId" value="6" />
+            <button type="submit" class="btn btn-primary">Gratuit</button>
+        </form>
+        </tr>
    
 </div>
-</div>
+
 
 
 <script src="~/js/site.js" asp-append-version="true"></script>

@@ -1,5 +1,6 @@
 ﻿using CobrArWeb.Data;
 using CobrArWeb.Models;
+using CobrArWeb.Models.RechercheArbo;
 using CobrArWeb.Models.Stock;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,7 +20,23 @@ namespace CobrArWeb.Controllers
             _context = context;
         }
 
-        // GET: StockController
+        private List<EquipeViewModel> GetEquipeViewModelList()
+        {
+            var equipes = _context.Products
+                .Include(p => p.Equipe)
+                .Include(p => p.Categorie)
+                .Include(p => p.SousCategorie)
+                .Include(p => p.Taille)
+                .Include(p => p.Fournisseur)
+                .GroupBy(p => p.Equipe.Nom)
+                .Select(g => new EquipeViewModel
+                {
+                    Equipe = g.Key,
+                    Categorie = g.ToList().GroupBy(p => p.Categorie.Nom).Select(gc => new CategoryViewModel { Categorie = gc.Key, SousCategorie = SousCategorieViewModel.Clean(gc.ToList(), new EquipeViewModel { Equipe = g.Key }) }).ToList(),
+                }).ToList();
+
+            return equipes;
+        }
         public IActionResult Index()
         {
             var products = _context.Products.ToList();
@@ -36,12 +53,14 @@ namespace CobrArWeb.Controllers
                 Categories = categories,
                 SousCategories = sousCategories,
                 Tailles = tailles,
-                Fournisseurs = _context.Fournisseurs.ToList()
+                Fournisseurs = _context.Fournisseurs.ToList(),
+                EquipeViewModelList = GetEquipeViewModelList() // Ajout de cette ligne
             };
 
             SetViewBagDropdownLists();
             return View("Stock", viewModel);
         }
+
         public void SetViewBagDropdownLists(int? selectedTailleId = null, int? selectedCategorieId = null)
         {
             // Définir la liste de tailles disponibles dans le ViewBag

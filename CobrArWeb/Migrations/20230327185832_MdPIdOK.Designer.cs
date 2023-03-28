@@ -4,6 +4,7 @@ using CobrArWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CobrArWeb.Migrations
 {
     [DbContext(typeof(CobrArWebContext))]
-    partial class CobrArWebContextModelSnapshot : ModelSnapshot
+    [Migration("20230327185832_MdPIdOK")]
+    partial class MdPIdOK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,7 +76,7 @@ namespace CobrArWeb.Migrations
                     b.ToTable("Fournisseurs");
                 });
 
-            modelBuilder.Entity("CobrArWeb.Data.MDP", b =>
+            modelBuilder.Entity("CobrArWeb.Data.ModeDePaiment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,7 +90,7 @@ namespace CobrArWeb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MDPs");
+                    b.ToTable("ModeDePaiments");
                 });
 
             modelBuilder.Entity("CobrArWeb.Data.Product", b =>
@@ -225,7 +228,7 @@ namespace CobrArWeb.Migrations
                     b.Property<string>("Fournisseur")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MDPId")
+                    b.Property<int>("ModeDePaiementId")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("Prix")
@@ -252,8 +255,6 @@ namespace CobrArWeb.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MDPId");
 
                     b.HasIndex("ProductId");
 
@@ -316,19 +317,11 @@ namespace CobrArWeb.Migrations
 
             modelBuilder.Entity("CobrArWeb.Data.Ventes", b =>
                 {
-                    b.HasOne("CobrArWeb.Data.MDP", "MDP")
-                        .WithMany()
-                        .HasForeignKey("MDPId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CobrArWeb.Data.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("MDP");
 
                     b.Navigation("Product");
                 });

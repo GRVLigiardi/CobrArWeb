@@ -7,5 +7,7 @@ namespace CobrArWeb.Models.RechercheArbo
         public string Equipe { get; set; }
 
         public List<CategoryViewModel> Categorie { get; set; }
+
+     
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using CobrArWeb.Extensions;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CobrArWeb.Controllers
 {
@@ -26,15 +27,20 @@ namespace CobrArWeb.Controllers
             var cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart") ?? new List<Item>();
             ViewBag.cart = cart;
             ViewBag.total = cart.Sum(item => item.Product.Prix * item.Quantite);
+         
             return View("Panier");
         }
 
         [Route("panier")]
         public IActionResult Panier()
         {
+            var modesDePaiement = _context.MDPs.ToList();
+            ViewBag.ModesDePaiement = modesDePaiement;
+
             var cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart") ?? new List<Item>();
             ViewBag.cart = cart;
             ViewBag.total = cart.Sum(item => item.Product.Prix * item.Quantite);
+
             return View();
         }
 
@@ -74,7 +80,7 @@ namespace CobrArWeb.Controllers
                 }
                 SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             }
-            return RedirectToAction("List", "Product");
+            return RedirectToAction("Panier", "Cart");
         }
 
 
@@ -85,7 +91,7 @@ namespace CobrArWeb.Controllers
             int index = isExist(id);
             cart.RemoveAt(index);
             SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
-            return RedirectToAction("Panier");
+            return RedirectToAction("Panier", "Cart");
         }
 
         private int isExist(int id)
@@ -111,7 +117,7 @@ namespace CobrArWeb.Controllers
                 cart[index].Quantite++;
                 SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             }
-            return RedirectToAction("Panier");
+            return RedirectToAction("Panier", "Cart");
         }
 
         [Route("decrement/{id}")]
@@ -132,7 +138,7 @@ namespace CobrArWeb.Controllers
                     SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
                 }
             }
-            return RedirectToAction("Panier");
+            return RedirectToAction("Panier", "Cart");
         }
         public ActionResult MyAction()
         {
@@ -141,7 +147,7 @@ namespace CobrArWeb.Controllers
         }
 
         [Route("checkout")]
-        public IActionResult Checkout()
+        public IActionResult Checkout(int modeDePaiementId)
         {
             // Récupérez le panier de la session
             List<Item> cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
@@ -150,6 +156,33 @@ namespace CobrArWeb.Controllers
             {
                 TempData["ErrorMessage"] = "Votre panier est vide.";
                 return RedirectToAction("Panier");
+            }
+
+            // Appliquez les conditions de validation en fonction du mode de paiement
+            decimal ajustementPrix = 0;
+            switch (modeDePaiementId)
+            {
+                case 1: // Cash
+                        // Appliquer la logique de l'ajustement du prix pour le paiement en espèces, si nécessaire
+                    break;
+                case 2: // Carte de débit
+                        // Appliquer la logique de l'ajustement du prix pour le paiement par carte de débit, si nécessaire
+                    break;
+                case 3: // Carte de crédit
+                        // Appliquer la logique de l'ajustement du prix pour le paiement par carte de crédit, si nécessaire
+                    break;
+                case 4: // Carte cadeau
+                        // Appliquer la logique de l'ajustement du prix pour le paiement par carte cadeau, si nécessaire
+                    break;
+                case 5: // Échange
+                        // Appliquer la logique de l'ajustement du prix pour le paiement par échange, si nécessaire
+                    break;
+                case 6: // Gratuit
+                        // Appliquer la logique de l'ajustement du prix pour le paiement gratuit, si nécessaire
+                    break;
+                default:
+                    TempData["ErrorMessage"] = "Mode de paiement non valide.";
+                    return RedirectToAction("Panier");
             }
 
             // Commencez une transaction
@@ -182,7 +215,6 @@ namespace CobrArWeb.Controllers
                         {
                             Date = DateTime.Now,
                             ProductId = item.Product.Id,
-                            
                             Produit = item.Product.Produit,
                             Categorie = item.Product.Categorie.Nom,
                             SousCategorie = item.Product.SousCategorie.Nom,
@@ -191,7 +223,8 @@ namespace CobrArWeb.Controllers
                             Quantite = item.Product.Quantite,
                             Prix = item.Product.Prix,
                             Fournisseur = item.Product.Fournisseur.Nom,
-                            Quantity = item.Quantite
+                            Quantity = item.Quantite,
+                            MDPId = modeDePaiementId,
                         };
                         _context.Ventes.Add(vente);
                     }
@@ -221,19 +254,16 @@ namespace CobrArWeb.Controllers
         [Route("caisse")]
         public IActionResult Caisse()
         {
-            var ventes = _context.Ventes.Include(v => v.Product).OrderByDescending(v => v.Date).ToList();
+            var ventes = _context.Ventes.Include(v => v.Product).Include(v => v.MDP).OrderByDescending(v => v.Date).ToList();
             return View(ventes);
         }
 
-
-        [HttpGet("panierpartial")]
-        public IActionResult PanierPartial()
+        [Route("continue")]
+        public IActionResult ContinueShopping()
         {
-            var cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart") ?? new List<Item>();
-            ViewBag.cart = cart;
-            ViewBag.total = cart.Sum(item => item.Product.Prix * item.Quantite);
-            return PartialView("_PanierPartial");
+            return RedirectToAction("List", "Product");
         }
+
 
     }
 }
