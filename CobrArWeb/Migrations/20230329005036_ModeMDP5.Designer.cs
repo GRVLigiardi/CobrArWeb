@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CobrArWeb.Migrations
 {
     [DbContext(typeof(CobrArWebContext))]
-    [Migration("20230328213824_ModeMDP3")]
-    partial class ModeMDP3
+    [Migration("20230329005036_ModeMDP5")]
+    partial class ModeMDP5
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -230,6 +230,10 @@ namespace CobrArWeb.Migrations
 
                     b.Property<int>("MDPId")
                         .HasColumnType("int");
+
+                    b.Property<string>("MDPNom")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Prix")
                         .HasColumnType("decimal(18,2)");

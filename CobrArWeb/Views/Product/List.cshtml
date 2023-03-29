@@ -7,75 +7,70 @@
 
 }
 
-
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-2" style="overflow:hidden">
-
-                        <div class="team-buttons">
-                            <button id="central-button" data-team-id="1">Rosario Central</button>
-                            <button id="boca-button" data-team-id="3">Boca Juniors</button>
-                            <button id="newells-button" data-team-id="2">Newell's Old Boys</button>
-                            <button id="river-button" data-team-id="4">River Plate</button>
-                            <button id="sanlorenzo-button" data-team-id="7">San Lorenzo</button>
-                            <button id="independiente-button" data-team-id="5">Independiente</button>
-                            <button id="racing-button" data-team-id="6">Racing Club</button>
-                            <button id="afa-button" data-team-id="8">Selection Argentine</button>
-                            <button id="otros-button" data-team-id="9">Otros</button>
-
-                        </div>
-                        <div class="cat-buttons">
-                            <button id="maillot-button" data-category-id="1">Maillots</button>
-                            <button id="textile-button" data-category-id="2">Textile</button>
-                            <button id="bazar-button" data-category-id="3">Bazar</button>
-                            <button id="ballons-button" data-category-id="4">Ballons</button>
-                            <button id="bebes-button" data-category-id="5">Bebe</button>
-                            <button id="ecole-button" data-category-id="6">Ecole</button>
-                        </div>
-                        <div class="subcat-buttons">
-                            <div class="subcat-buttons">
-                                <select>
-                                    <option value="">Toutes les sous-catégories</option>
-                                    @foreach (var equipe in Model)
-                                    {
-                                        foreach (var category in equipe.Categorie)
-                                        {
-                                            foreach (var subCategory in category.SousCategorie)
-                                            {
-                                                <option value="@subCategory.Id">@subCategory.Name</option>
-                                            }
-                                        }
-                                    }
-                                </select>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="products-window" style="height: 60vh; width:100vh; overflow-y: auto;">
-                            <table id="product-table" class="table table-bordered table-striped">
+<div class="container-fluid">
+    <div class="row no-gutters">
+        <div class="col-md-3 p-0 m-0" style="display:flex;">
+            <div class="team-buttons">
+            
+          
+                <button id="central-button" data-team-id="1">Rosario Central</button>
+                <button id="boca-button" data-team-id="3">Boca Juniors</button>
+                <button id="newells-button" data-team-id="2">Newell's Old Boys</button>
+                <button id="river-button" data-team-id="4">River Plate</button>
+                <button id="sanlorenzo-button" data-team-id="7">San Lorenzo</button>
+                <button id="independiente-button" data-team-id="5">Independiente</button>
+                <button id="racing-button" data-team-id="6">Racing Club</button>
+                <button id="afa-button" data-team-id="8">Selection Argentine</button>
+                <button id="otros-button" data-team-id="9">Otros</button>
+            </div>
+            <div class="cat-buttons">
+                <button id="maillot-button" data-category-id="1">Maillots</button>
+                <button id="textile-button" data-category-id="2">Textile</button>
+                <button id="bazar-button" data-category-id="3">Bazar</button>
+                <button id="ballons-button" data-category-id="4">Ballons</button>
+                <button id="bebes-button" data-category-id="5">Bebe</button>
+                <button id="ecole-button" data-category-id="6">Ecole</button>
+            </div>
+            <div class="subcat-buttons">
+                <select>
+                    <option value="">Toutes les sous-catégories</option>
+                    @foreach (var equipe in Model)
+                    {
+                        foreach (var category in equipe.Categorie)
+                        {
+                            foreach (var subCategory in category.SousCategorie)
+                            {
+                                <option value="@subCategory.Id">@subCategory.Name</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-md-9 p-0 m-0">
+            <div class="products-window">
+                <table id="product-table" class="table table-bordered table-striped">
                                 <thead>
-                                    <tr>
-                                        <th>Equipe</th>
-                                        <th>Produit</th>
-                                        <th>Catégorie</th>
-                                        <th>Sous-Catégorie</th>
-                                        <th>Taille</th>
-                                        <th>Quantite</th>
-                                        <th>Prix</th>
-                                        <th>Fournisseur</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var equipe in Model)
+                        <tr>
+                            <th>Equipe</th>
+                            <th>Produit</th>
+                            <th>Catégorie</th>
+                            <th>Sous-Catégorie</th>
+                            <th>Taille</th>
+                            <th>Quantite</th>
+                            <th>Prix</th>
+                            <th>Fournisseur</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var equipe in Model)
+                        {
+                            @foreach (var category in equipe.Categorie)
+                            {
+                                @foreach (var souscategory in category.SousCategorie)
+                                {
+                                    @foreach (var product in souscategory.Products)
                                     {
-                                        @foreach (var category in equipe.Categorie)
-                                        {
-                                            @foreach (var souscategory in category.SousCategorie)
-                                            {
-                                                @foreach (var product in souscategory.Products)
-                                                {
                                                     <tr class="table-responsive-md" data-team-id="@product.EquipeId" data-category-id="@product.CategorieId" data-sub-category-id="@product.SousCategorieId" data-sub-category-name="@product.SousCategorie.Nom">
                                                         <td>@equipe.Equipe</td>
                                                         <td>@product.Produit</td>
@@ -95,8 +90,5 @@
                                     }
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
-                </div>
 
         <script src="~/js/site.js" asp-append-version="true"></script>

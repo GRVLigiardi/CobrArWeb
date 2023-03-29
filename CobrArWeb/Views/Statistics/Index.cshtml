@@ -31,7 +31,14 @@
                 </div>
             </div>
         </div>
-        
+       
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Mode De Paiement Le Plus utilisé</h5>
+                <p class="card-text">@(string.IsNullOrEmpty(Model.MdpLePlusUtilise) ? "Aucune donnée disponible" : Model.MdpLePlusUtilise)</p>
+            </div>
+        </div>
+    </div>
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body">

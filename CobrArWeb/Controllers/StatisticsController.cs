@@ -19,29 +19,33 @@ namespace CobrArWeb.Controllers
         {
             var statistiques = new StatistiquesVentesModel
             {
-                TotalVentes = _context.Ventes.Where(v => v.Quantity != null).Sum(v => v.Quantity),
-                TotalRevenue = _context.Ventes.Where(v => v.Quantity != null && v.Prix != null).Sum(v => v.Quantity * v.Prix.Value),
+                TotalVentes = _context.Ventes.Sum(v => v.Quantity),
+                TotalRevenue = _context.Ventes.Sum(v => v.Quantity * v.Prix.GetValueOrDefault()),
 
+                // Ajoutez les nouvelles statistiques ici
                 EquipeLaPlusVendue = _context.Ventes
-                    .Where(v => v.Quantity != null && v.Equipe != null)
                     .GroupBy(v => v.Equipe)
                     .OrderByDescending(g => g.Sum(v => v.Quantity))
                     .Select(g => g.Key)
                     .FirstOrDefault(),
 
+                MdpLePlusUtilise = _context.Ventes
+                    .GroupBy(v => v.MDPNom)
+                    .OrderByDescending(g => g.Count())
+                    .Select(g => g.Key)
+                    .FirstOrDefault().ToString(),
+
                 HorairePlusDeVentes = _context.Ventes
-                    .Where(v => v.Date != null)
                     .GroupBy(v => v.Date.Hour)
                     .OrderByDescending(g => g.Count())
-                    .Select(g => g.Key.ToString())
-                    .FirstOrDefault(),
+                    .Select(g => g.Key)
+                    .FirstOrDefault().ToString(),
 
                 MoisPlusDeVentes = _context.Ventes
-                    .Where(v => v.Date != null)
                     .GroupBy(v => v.Date.Month)
                     .OrderByDescending(g => g.Count())
-                    .Select(g => g.Key.ToString())
-                    .FirstOrDefault(),
+                    .Select(g => g.Key)
+                    .FirstOrDefault().ToString(),
 
                 RevenuPeriode = "" // Vous pouvez définir cette valeur en fonction de l'affichage souhaité (par jour, semaine, mois ou année)
             };

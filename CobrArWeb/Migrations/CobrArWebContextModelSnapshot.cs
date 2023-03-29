@@ -228,6 +228,10 @@ namespace CobrArWeb.Migrations
                     b.Property<int>("MDPId")
                         .HasColumnType("int");
 
+                    b.Property<string>("MDPNom")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal?>("Prix")
                         .HasColumnType("decimal(18,2)");
 

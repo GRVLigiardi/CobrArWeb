@@ -185,6 +185,15 @@ namespace CobrArWeb.Controllers
                     return RedirectToAction("Panier");
             }
 
+            // Récupérez le MDP à partir de la base de données en utilisant modeDePaiementId
+            MDP mdp = _context.MDPs.SingleOrDefault(m => m.Id == modeDePaiementId);
+
+            if (mdp == null)
+            {
+                TempData["ErrorMessage"] = "Mode de paiement non valide.";
+                return RedirectToAction("Panier");
+            }
+
             // Commencez une transaction
             using (IDbContextTransaction transaction = _context.Database.BeginTransaction())
             {
@@ -224,6 +233,7 @@ namespace CobrArWeb.Controllers
                             Prix = item.Product.Prix,
                             Fournisseur = item.Product.Fournisseur.Nom,
                             Quantity = item.Quantite,
+                            MDPNom = mdp.Nom,
                             MDPId = modeDePaiementId,
                         };
                         _context.Ventes.Add(vente);

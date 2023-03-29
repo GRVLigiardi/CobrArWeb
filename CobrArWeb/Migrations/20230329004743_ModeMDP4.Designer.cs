@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CobrArWeb.Migrations
 {
     [DbContext(typeof(CobrArWebContext))]
-    [Migration("20230328213715_ModeMDP")]
-    partial class ModeMDP
+    [Migration("20230329004743_ModeMDP4")]
+    partial class ModeMDP4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -231,8 +231,9 @@ namespace CobrArWeb.Migrations
                     b.Property<int>("MDPId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ModeDPId")
-                        .HasColumnType("int");
+                    b.Property<string>("MDPNom")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Prix")
                         .HasColumnType("decimal(18,2)");
@@ -260,8 +261,6 @@ namespace CobrArWeb.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MDPId");
-
-                    b.HasIndex("ModeDPId");
 
                     b.HasIndex("ProductId");
 
@@ -330,12 +329,6 @@ namespace CobrArWeb.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CobrArWeb.Data.MDP", "ModeDP")
-                        .WithMany()
-                        .HasForeignKey("ModeDPId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CobrArWeb.Data.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -343,8 +336,6 @@ namespace CobrArWeb.Migrations
                         .IsRequired();
 
                     b.Navigation("MDP");
-
-                    b.Navigation("ModeDP");
 
                     b.Navigation("Product");
                 });

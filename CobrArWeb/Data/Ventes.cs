@@ -36,6 +36,7 @@ namespace CobrArWeb.Data
         public string? Fournisseur { get; set; }
 
         public int MDPId { get; set; }
+        public string MDPNom { get; set; }
         public virtual MDP MDP { get; set; }
 
 

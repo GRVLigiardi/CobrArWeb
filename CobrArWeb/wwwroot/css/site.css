@@ -23,6 +23,7 @@ html {
 
 body {
     margin-left:0px;
+    margin-right :0px;
     margin-bottom: 60px;
     background-color: antiquewhite;
 }
@@ -48,11 +49,11 @@ body {
 }
 
 .button {
-    width: 100%;
+    width: 80%;
 }
 
 .products-window,
-.cart-window {
+{
     background-color: #f8f9fa;
     border: 1px solid #dee2e6;
     padding: 20px;
@@ -80,7 +81,9 @@ button{
 }
 
 .team-button{
+    
    display:inline-block;
+
 }
 
 
@@ -286,37 +289,14 @@ button{
     color: yellow;
 }
 
+.main-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 10px;
+}
+
+
 .products-window {
-    border: 1px solid #ccc;
-    padding: 1rem;
-    border-radius: 5px;
-    background-color: white;
-}
-
-.cart-window {
-    background: none;
-    padding: 1%;
-    border-radius: 5px;
-    position: fixed;
-    top: 10%;
-    right: 1%;
-    width: 30%;
-}
-
-.no-padding {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
-
-
-.panier-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-
-
-.valider {
-    margin-top: 20px;
+    height: 60vh;
+    overflow-y: auto;
 }
