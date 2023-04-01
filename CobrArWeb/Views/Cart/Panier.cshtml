@@ -2,11 +2,33 @@
 @model List<EquipeViewModel>
 
 @section scripts {
-}
+    <script>
+        window.onload = function () {
+            document.getElementById("carteCadeauBtn").addEventListener("click", function () {
+                var ajustementPrix = document.getElementById("ajustementPrix");
+                var adjustedTotal = document.getElementById("adjustedTotal");
 
+                if (ajustementPrix.style.display === "none") {
+                    ajustementPrix.style.display = "block";
+                    adjustedTotal.style.display = "block";
+                } else {
+                    ajustementPrix.style.display = "none";
+                    adjustedTotal.style.display = "none";
+                }
+            });
+        };
+    </script>
+}
 
 <div class="col-md-4">
     <h3>Panier</h3>
+
+    @if (TempData["WarningMessage"] != null)
+    {
+        <div class="alert alert-warning">
+            @TempData["WarningMessage"]
+        </div>
+    }
 
     @if (TempData["SuccessMessage"] != null)
     {
@@ -43,17 +65,27 @@
                 <td><a asp-controller="cart" asp-action="decrement" asp-route-id="@item.Product.Id">-</a></td>
                 <td><a asp-controller="cart" asp-action="increment" asp-route-id="@item.Product.Id">+</a></td>
                 <td>@(item.Product.Prix * item.Quantite)</td>
+                @if (Context.Session.GetString("carteCadeauValue") != null)
+                {
+                <tr>
+                    <td>Carte cadeau</td>
+                    <td>- @(Context.Session.GetString("carteCadeauValue")) $</td>
+                </tr>
+                }
             </tr>
+
         }
         <tr>
             <td align="right" colspan="6">TOTAL TICKET</td>
             <td>
-                @ViewBag.total
+                <p>Total : @(ViewBag.total ?? 0) $</p>
+                <p id="ajustementPrix" style="display: none;">Ajustement du prix : @(ViewBag.ajustementPrix ?? 0) $</p>
+                <p id="adjustedTotal" style="display: none;">Total ajusté : @(ViewBag.adjustedTotal ?? ViewBag.total) $</p>
+
             </td>
            </tr>
     </table>
     <div class="valider">
-
         <form asp-controller="Cart" asp-action="ContinueShopping" method="post">
             <button type="submit" class="btn btn-primary">Continuer</button>
         </form>
@@ -67,18 +99,21 @@
         </form>
         <form asp-controller="Cart" asp-action="Checkout" method="post">
             <input type="hidden" name="modeDePaiementId" value="3" />
+            <label for="pourcentage">Pourcentage :</label>
+            <input type="text" id="pourcentage" name="pourcentage" />
             <button type="submit" class="btn btn-primary">Carte de Crédit</button>
         </form>
         <form asp-controller="Cart" asp-action="Checkout" method="post">
             <input type="hidden" name="modeDePaiementId" value="4" />
-            <button type="submit" class="btn btn-primary">Carte Cadeau</button>
+            <label for="montantCarteCadeau">Montant de la carte cadeau :</label>
+            <input type="text" id="montantCarteCadeau" name="montantCarteCadeau" />
+            <button type="submit" class="btn btn-primary" id="carteCadeauBtn">Carte Cadeau</button>
         </form>
-        <form asp-controller="Cart" asp-action="Checkout" method="post">
-            <input type="hidden" name="modeDePaiementId" value="5" />
-            <button type="submit" class="btn btn-primary">Échange</button>
-        </form>
+       
         <form asp-controller="Cart" asp-action="Checkout" method="post">
             <input type="hidden" name="modeDePaiementId" value="6" />
+            <label for="justificationGratuit">Justification pour la commande gratuite :</label>
+            <input type="text" id="justificationGratuit" name="justificationGratuit" />
             <button type="submit" class="btn btn-primary">Gratuit</button>
         </form>
         </tr>

@@ -1,6 +1,5 @@
 ﻿@using CobrArWeb.Data;
 @using CobrArWeb.Models.Stock;
-@using CobrArWeb.Data;
 @using CobrArWeb.Models.RechercheArbo;
 @model StockViewModel
 
@@ -8,58 +7,9 @@
 
 }
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="team-buttons">
-                <button id="central-button" data-team-id="1">Rosario Central</button>
-                <button id="boca-button" data-team-id="2">Boca Juniors</button>
-                <button id="newells-button" data-team-id="3">Newell's Old Boys</button>
-                <button id="river-button" data-team-id="4">River Plate</button>
-                <button id="sanlorenzo-button" data-team-id="5">San Lorenzo</button>
-                <button id="independiente-button" data-team-id="6">Independiente</button>
-                <button id="racing-button" data-team-id="7">Racing Club</button>
-                <button id="afa-button" data-team-id="8">Selection Argentine</button>
-                <button id="otros-button" data-team-id="9">Otros</button>
-                <button id="clear-button">X</button>
-            </div>
-           
-            </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table id="team-table" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Equipe</th>
-                                    <th>Produit</th>
-                                    <th>Taille</th>
-                                    <th>Quantite</th>
-                                    <th>Prix</th>
-                                    <th>Modifier</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var product in Model.Products)
-                                {
-                                    <tr class="table-responsive-md" data-team-id="@product.EquipeId" data-category-id="@product.CategorieId" data-sub-category-id="@product.SousCategorieId" data-sub-category-name="@product.SousCategorie.Nom">
-                                        <td>@product.Equipe.Nom</td>
-                                        <td>@product.Produit</td>
-                                        <td>@product.Taille.Nom</td>
-                                        <td>@product.Quantite</td>
-                                        <td>@product.Prix</td>
-                                        <td>
-                                            <a asp-controller="Stock" asp-action="Edit" asp-route-id="@product.Id">Modifier</a>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+    
+                        
+                        @Html.Partial("~/Views/Product/List.cshtml", Model.ListViewModel)
+
 
         <script src="~/js/site.js" asp-append-version="true"></script>

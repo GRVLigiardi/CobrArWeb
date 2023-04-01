@@ -17,5 +17,9 @@ namespace CobrArWeb.Models.Stock
 
         public List<CategoryViewModel> Categorie { get; set; }
         public List<EquipeViewModel> EquipeViewModelList { get; set; }
+
+        public ListViewModel ListViewModel { get; set; }
+
+ 
     }
 }

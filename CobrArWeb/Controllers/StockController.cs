@@ -46,6 +46,7 @@ namespace CobrArWeb.Controllers
             var tailles = _context.Tailles.ToList();
             var fournisseurs = _context.Fournisseurs.ToList();
             var viewModel = new StockViewModel
+
             {
                 NewProduct = new Product(),
                 Products = products,
@@ -54,28 +55,32 @@ namespace CobrArWeb.Controllers
                 SousCategories = sousCategories,
                 Tailles = tailles,
                 Fournisseurs = _context.Fournisseurs.ToList(),
-                EquipeViewModelList = GetEquipeViewModelList() // Ajout de cette ligne
+                ListViewModel = new ListViewModel
+                {
+                    EquipeViewModelList = GetEquipeViewModelList()
+                }
             };
 
             SetViewBagDropdownLists();
+            ViewBag.IsStockView = true;
             return View("Stock", viewModel);
         }
 
         public void SetViewBagDropdownLists(int? selectedTailleId = null, int? selectedCategorieId = null)
         {
-            // Définir la liste de tailles disponibles dans le ViewBag
+
             ViewBag.TailleList = new SelectList(_context.Tailles, "Id", "Nom", selectedTailleId);
 
-            // Définir la liste de catégories disponibles dans le ViewBag
+
             ViewBag.CategorieList = new SelectList(_context.Categories, "Id", "Nom");
 
-            // Définir la liste de sous-catégories disponibles dans le ViewBag
+
             ViewBag.SousCategorieList = new SelectList(_context.SousCategories.Where(sc => sc.CategorieId == selectedCategorieId), "Id", "Nom");
 
-            // Définir la liste d'équipes disponibles dans le ViewBag
+
             ViewBag.EquipeList = new SelectList(_context.Equipes, "Id", "Nom");
 
-            // Définir la liste de fournisseurs disponibles dans le ViewBag
+
             ViewBag.FournisseurList = new SelectList(_context.Fournisseurs, "Id", "Nom");
         }
 
@@ -96,6 +101,7 @@ namespace CobrArWeb.Controllers
 
             return Json(sousCategories);
         }
+
 
         [HttpGet]
         public IActionResult Edit(int id)
@@ -134,4 +140,7 @@ namespace CobrArWeb.Controllers
             return RedirectToAction("Index");
         }
     }
+
 }
+
+

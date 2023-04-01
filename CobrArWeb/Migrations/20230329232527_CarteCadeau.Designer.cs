@@ -4,6 +4,7 @@ using CobrArWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CobrArWeb.Migrations
 {
     [DbContext(typeof(CobrArWebContext))]
-    partial class CobrArWebContextModelSnapshot : ModelSnapshot
+    [Migration("20230329232527_CarteCadeau")]
+    partial class CarteCadeau
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,6 +242,7 @@ namespace CobrArWeb.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MDPNom2")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Prix")
@@ -319,7 +323,7 @@ namespace CobrArWeb.Migrations
             modelBuilder.Entity("CobrArWeb.Data.SousCategorie", b =>
                 {
                     b.HasOne("CobrArWeb.Data.Categorie", "Category")
-                        .WithMany("SousCategories")
+                        .WithMany()
                         .HasForeignKey("CategorieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -349,8 +353,6 @@ namespace CobrArWeb.Migrations
             modelBuilder.Entity("CobrArWeb.Data.Categorie", b =>
                 {
                     b.Navigation("Products");
-
-                    b.Navigation("SousCategories");
                 });
 
             modelBuilder.Entity("CobrArWeb.Data.Equipe", b =>

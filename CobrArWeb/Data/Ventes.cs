@@ -39,6 +39,9 @@ namespace CobrArWeb.Data
         public string MDPNom { get; set; }
         public virtual MDP MDP { get; set; }
 
+        public decimal? AjustementPrix { get; set; }
 
+        public int? MDPId2 { get; set; }
+        public string? MDPNom2 { get; set; }
     }
 }

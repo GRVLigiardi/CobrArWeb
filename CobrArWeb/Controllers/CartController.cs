@@ -147,8 +147,9 @@ namespace CobrArWeb.Controllers
         }
 
         [Route("checkout")]
-        public IActionResult Checkout(int modeDePaiementId)
+        public IActionResult Checkout(int modeDePaiementId, int? modeDePaiementId2 = null)
         {
+
             // Récupérez le panier de la session
             List<Item> cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
 
@@ -157,36 +158,134 @@ namespace CobrArWeb.Controllers
                 TempData["ErrorMessage"] = "Votre panier est vide.";
                 return RedirectToAction("Panier");
             }
+            decimal totalPrice = (decimal)cart.Sum(item => item.Product.Prix * item.Quantite);
+            ViewBag.total = totalPrice;
 
-            // Appliquez les conditions de validation en fonction du mode de paiement
             decimal ajustementPrix = 0;
+            decimal ajustementPrix2 = 0;
+            MDP mdp2 = null;
             switch (modeDePaiementId)
             {
-                case 1: // Cash
-                        // Appliquer la logique de l'ajustement du prix pour le paiement en espèces, si nécessaire
+                case 1:
                     break;
-                case 2: // Carte de débit
-                        // Appliquer la logique de l'ajustement du prix pour le paiement par carte de débit, si nécessaire
+                case 2:
                     break;
-                case 3: // Carte de crédit
-                        // Appliquer la logique de l'ajustement du prix pour le paiement par carte de crédit, si nécessaire
+                case 3:
+                    string pourcentage = Request.Form["pourcentage"];
+                    decimal pourcentageValue;
+                    if (decimal.TryParse(pourcentage, out pourcentageValue))
+                    {
+                        ajustementPrix = (ViewBag.total * pourcentageValue) / 100;
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "Veuillez entrer un pourcentage valide.";
+                        return RedirectToAction("Panier");
+                    }
                     break;
-                case 4: // Carte cadeau
-                        // Appliquer la logique de l'ajustement du prix pour le paiement par carte cadeau, si nécessaire
-                    break;
-                case 5: // Échange
-                        // Appliquer la logique de l'ajustement du prix pour le paiement par échange, si nécessaire
-                    break;
-                case 6: // Gratuit
-                        // Appliquer la logique de l'ajustement du prix pour le paiement gratuit, si nécessaire
+                                case 4:
+                    string montantCarteCadeau = Request.Form["montantCarteCadeau"];
+
+                    if (string.IsNullOrEmpty(montantCarteCadeau))
+                    {
+                        TempData["ErrorMessage"] = "Veuillez entrer un montant pour la carte cadeau.";
+                        return RedirectToAction("Panier");
+                    }
+
+                    decimal montantCarteCadeauValue;
+                    if (decimal.TryParse(montantCarteCadeau, out montantCarteCadeauValue))
+                    {
+                        if (montantCarteCadeauValue >= ViewBag.total)
+                        {
+                            decimal difference = montantCarteCadeauValue - ViewBag.total;
+                            TempData["SuccessMessage"] = $"Il reste {difference} $ sur la carte cadeau.";
+                            return RedirectToAction("Panier");
+                        }
+                        else
+                        {
+                            HttpContext.Session.SetString("carteCadeauValue", montantCarteCadeauValue.ToString());
+                            TempData["WarningMessage"] = $"Il reste {ViewBag.total - montantCarteCadeauValue} $ à payer. Choisissez un deuxième moyen de paiement.";
+                            if (modeDePaiementId2.HasValue)
+                            {
+                                mdp2 = _context.MDPs.FirstOrDefault(m => m.Id == modeDePaiementId2.Value);
+                                if (mdp2 == null)
+                                {
+                                    TempData["ErrorMessage"] = "Deuxième mode de paiement non valide.";
+                                    return RedirectToAction("Panier");
+                                }
+                                decimal restantAPayer = ViewBag.total - montantCarteCadeauValue;
+                                switch (modeDePaiementId2.Value)
+                                {
+                                    case 1:
+                                        ajustementPrix2 = -restantAPayer;
+                                        break;
+                                    case 2:
+                                        ajustementPrix2 = -restantAPayer;
+                                        break;
+                                    case 3:
+                                        string pourcentage2 = Request.Form["pourcentage2"];
+                                        decimal pourcentageValue2;
+                                        if (decimal.TryParse(pourcentage2, out pourcentageValue2))
+                                        {
+                                            ajustementPrix2 = ((ViewBag.total - montantCarteCadeauValue) * pourcentageValue2) / 100;
+                                        }
+                                        else
+                                        {
+                                            TempData["ErrorMessage"] = "Veuillez entrer un pourcentage valide pour le deuxième mode de paiement.";
+                                            return RedirectToAction("Panier");
+                                        }
+                                        break;
+                                   
+                                    case 6:
+                                        string justificationGratuitSuiteKdo = Request.Form["justificationGratuit"];
+                                        if (!string.IsNullOrEmpty(justificationGratuitSuiteKdo))
+                                        {
+                                            ajustementPrix = -ViewBag.total;
+                                            TempData["SuccessMessage"] = $"La commande a été effectuée gratuitement avec la justification suivante : GRATUIT : {justificationGratuitSuiteKdo}";
+                                        }
+                                        else
+                                        {
+                                            TempData["ErrorMessage"] = "Veuillez entrer une justification pour la commande gratuite.";
+                                            return RedirectToAction("Panier");
+                                        }
+                                        break;
+                                    default:
+                                        TempData["ErrorMessage"] = "Mode de paiement non valide.";
+                                        return RedirectToAction("Panier");
+                                }
+                            }
+                            else
+                            {
+                                return RedirectToAction("Panier");
+                            }
+                        }
+                    }
+
+                        break;
+              
+                case 6:
+                    string justificationGratuit = Request.Form["justificationGratuit"];
+                    if (!string.IsNullOrEmpty(justificationGratuit))
+                    {
+                        ajustementPrix = -ViewBag.total;
+                        TempData["SuccessMessage"] = $"La commande a été effectuée gratuitement avec la justification suivante : GRATUIT : {justificationGratuit}";
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "Veuillez entrer une justification pour la commande gratuite.";
+                        return RedirectToAction("Panier");
+                    }
                     break;
                 default:
                     TempData["ErrorMessage"] = "Mode de paiement non valide.";
                     return RedirectToAction("Panier");
             }
 
+            decimal adjustedTotal = totalPrice + ajustementPrix + ajustementPrix2;
+            ViewBag.adjustedTotal = adjustedTotal;
+            ViewBag.ajustementPrix = ajustementPrix;
             // Récupérez le MDP à partir de la base de données en utilisant modeDePaiementId
-            MDP mdp = _context.MDPs.SingleOrDefault(m => m.Id == modeDePaiementId);
+            MDP mdp = _context.MDPs.FirstOrDefault(m => m.Id == modeDePaiementId);
 
             if (mdp == null)
             {
@@ -235,6 +334,9 @@ namespace CobrArWeb.Controllers
                             Quantity = item.Quantite,
                             MDPNom = mdp.Nom,
                             MDPId = modeDePaiementId,
+                            MDPId2 = mdp2?.Id, 
+                            MDPNom2 = mdp2?.Nom,
+                            AjustementPrix = (ajustementPrix != 0 || ajustementPrix2 != 0) ? (ajustementPrix + ajustementPrix2) : (decimal?)null,
                         };
                         _context.Ventes.Add(vente);
                     }
@@ -265,6 +367,7 @@ namespace CobrArWeb.Controllers
         public IActionResult Caisse()
         {
             var ventes = _context.Ventes.Include(v => v.Product).Include(v => v.MDP).OrderByDescending(v => v.Date).ToList();
+
             return View(ventes);
         }
 
@@ -274,6 +377,15 @@ namespace CobrArWeb.Controllers
             return RedirectToAction("List", "Product");
         }
 
+        [HttpPost]
+        public IActionResult ProcessExchange(int equipe, int categorie, int sousCategorie, int productId)
+        {
+            var equipeObj = _context.Equipes.FirstOrDefault(e => e.Id == equipe);
+            var categorieObj = _context.Categories.FirstOrDefault(c => c.Id == categorie);
+            var sousCategorieObj = _context.SousCategories.FirstOrDefault(sc => sc.Id == sousCategorie);
+
+            return RedirectToAction("Checkout");
+        }
 
     }
 }

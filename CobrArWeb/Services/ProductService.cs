@@ -1,7 +1,7 @@
 ﻿using CobrArWeb.Services;
 using CobrArWeb.Services.Interfaces;
 using CobrArWeb.Data;
-using CobrArWeb.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace CobrArWeb.Services
 {
@@ -13,10 +13,15 @@ namespace CobrArWeb.Services
             _Context = context;
         }
 
+
+
+
         public List<Product> GetProducts()
         {
             var products = _Context.Products.ToList();
             return products;
         }
+
+
     }
 }

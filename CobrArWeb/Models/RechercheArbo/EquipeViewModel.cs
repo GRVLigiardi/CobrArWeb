@@ -8,6 +8,5 @@ namespace CobrArWeb.Models.RechercheArbo
 
         public List<CategoryViewModel> Categorie { get; set; }
 
-     
-    }
+      }
 }

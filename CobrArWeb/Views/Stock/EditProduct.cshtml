@@ -1,22 +1,8 @@
 ﻿@model CobrArWeb.Data.Product
+
 @section Scripts {
     <script>
-        $(document).ready(function () {
-            // Lorsque la liste déroulante des Categories change
-            $('#categorie-dropdown').on('change', function () {
-                var categorieId = $(this).val();
 
-                // Faire une requête AJAX pour obtenir les SousCategories correspondantes
-                $.getJSON('@Url.Action("GetSousCategoriesByCategorie", "Stock")', { categorieId: categorieId }, function (data) {
-                    console.log('categorieId:', categorieId);
-
-                    // Ajouter les nouvelles SousCategories à la liste déroulante
-                    $.each(data, function (index, item) {
-                        $('#souscategorie-dropdown').append($('<option></option>').val(item.id).html(item.nom));
-                    });
-                });
-            });
-        });
     </script>
 }
 

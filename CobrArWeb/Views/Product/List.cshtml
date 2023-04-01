@@ -1,6 +1,6 @@
 ﻿@using CobrArWeb.Data;
-@using CobrArWeb.Models.RechercheArbo;
-@model List<EquipeViewModel>
+@using CobrArWeb.Models.RechercheArbo
+@model CobrArWeb.Models.RechercheArbo.ListViewModel
 @section scripts {
 
 
@@ -34,7 +34,7 @@
             <div class="subcat-buttons">
                 <select>
                     <option value="">Toutes les sous-catégories</option>
-                    @foreach (var equipe in Model)
+                    @foreach (var equipe in Model.EquipeViewModelList)
                     {
                         foreach (var category in equipe.Categorie)
                         {
@@ -63,7 +63,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var equipe in Model)
+                        @foreach (var equipe in Model.EquipeViewModelList)
                         {
                             @foreach (var category in equipe.Categorie)
                             {
@@ -81,7 +81,15 @@
                                                         <td>@product.Prix</td>
                                                         <td>@product.Fournisseur.Nom</td>
                                                         <td>
-                                                            <a asp-controller="cart" asp-action="buy" asp-route-id="@product.Id" asp-route-redirectToPanier="false">Ajouter Au Panier</a>
+                                                @if (ViewBag.IsStockView as bool? ?? false)
+                                                {
+                                                    <a asp-controller="Stock" asp-action="Edit" asp-route-id="@product.Id">Modifier</a>
+                                                }
+                                                else
+                                                {
+                                                    <a asp-controller="cart" asp-action="buy" asp-route-id="@product.Id" asp-route-redirectToPanier="false">Ajouter Au Panier</a>
+                                                }
+                                                </td>
 
                                                     </tr>
                                                 }
@@ -90,5 +98,10 @@
                                     }
                                 </tbody>
                             </table>
+
+</div>
+</div>
+</div>
+</div>
 
         <script src="~/js/site.js" asp-append-version="true"></script>
