@@ -1,13 +1,23 @@
 ﻿@model CobrArWeb.Data.Product
 
 @section Scripts {
-            <script src="~/js/FilterStockLists.js" ></script>
+    <script id="all-subcategories" type="application/json">
+        @Html.Raw(Json.Serialize(ViewBag.AllSubCategories))
+    </script>
+    <script src="~/js/FilterStockLists.js"></script>
 }
 
 
-<h2>Edit Product</h2>
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["message"]
+    </div>
+}
 
-<form asp-action="EditProduct" method="post">
+<h2>Create Product</h2>
+
+<form asp-action="CreateProduct" method="post">
     <input type="hidden" asp-for="Id" />
 
     <div class="form-group">

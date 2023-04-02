@@ -139,8 +139,30 @@ namespace CobrArWeb.Controllers
             // Rediriger vers la vue "Stock.cshtml" après l'édition
             return RedirectToAction("Index");
         }
-    }
 
-}
+        [HttpGet]
+        public IActionResult Create()
+        {
+            ViewBag.CategorieList = new SelectList(_context.Categories, "Id", "Nom");
+            ViewBag.AllSubCategories = _context.SousCategories.ToList();
+            SetViewBagDropdownLists();
+            return View("CreateProduct", new Product());
+        }
+
+        [HttpPost]
+        public IActionResult CreateProduct(Product product)
+        {
+            // Ajouter le nouveau produit à la base de données
+            _context.Products.Add(product);
+            _context.SaveChanges();
+
+            TempData["message"] = $"Le produit '{product.Produit}' de l'équipe '{_context.Equipes.Find(product.EquipeId).Nom}', de la catégorie '{_context.Categories.Find(product.CategorieId).Nom}', de la sous-catégorie '{_context.SousCategories.Find(product.SousCategorieId).Nom}', de la taille '{_context.Tailles.Find(product.TailleId).Nom}', de prix '{product.Prix}' et de quantité '{product.Quantite}' du fournisseur '{_context.Fournisseurs.Find(product.FournisseurId).Nom}' a été ajouté avec succès.";
+
+            return View("CreateProduct", product);
+        }
+
+
+    }
+    }
 
 

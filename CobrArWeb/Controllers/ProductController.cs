@@ -55,8 +55,6 @@ namespace CobrArWeb.Controllers
             }
         }
 
-
-
         // Ajouter bouton pour ajouter au panier
         public IActionResult ProductsBySubcategory(string subcategory)
         {

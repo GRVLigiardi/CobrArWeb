@@ -4,9 +4,11 @@
 @model StockViewModel
 
 @section scripts {
-
+    <script src="~/js/FilterProductButtons.js"></script>
 }
 
+
+<a asp-action="Create" class="btn btn-primary mb-3">Ajouter un produit</a>
     
                         
                         @Html.Partial("~/Views/Product/List.cshtml", Model.ListViewModel)
