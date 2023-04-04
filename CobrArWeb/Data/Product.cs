@@ -31,5 +31,6 @@ namespace CobrArWeb.Data
         public int? FournisseurId { get; set; }
         public virtual Fournisseur Fournisseur { get; set; }
 
-        }
+        public ICollection<ProductHistory> ProductHistories { get; set; }
+    }
 }

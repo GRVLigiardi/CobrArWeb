@@ -18,8 +18,9 @@ namespace CobrArWeb.Data
         public DbSet<SousCategorie> SousCategories { get; set; }
         public DbSet<Fournisseur> Fournisseurs { get; set; }
         public DbSet<Taille> Tailles { get; set; }
-
         public DbSet<MDP> MDPs { get; set; }
+        public DbSet<ProductHistory> ProductHistories { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
     }
 }

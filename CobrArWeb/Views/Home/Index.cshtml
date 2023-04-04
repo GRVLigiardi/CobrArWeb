@@ -2,6 +2,13 @@
     ViewData["Title"] = "Home Page";
 }
 
+@section scripts {
+    <script src="~/js/ChatBox.js" asp-append-version="true"></script>
+
+
+}
+
+
 <div class="text-center">
     <div class="container">
         <div class="row">
@@ -42,3 +49,42 @@
         </div>
     </div>
 </div>
+
+ @if (ViewData["IsAuthenticated"] != null && true.Equals(ViewData["IsAuthenticated"]))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+                            <h3 class="panel-title">Accès rapide</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                <li>@Html.ActionLink("List", "List", "Product")</li>
+                <li>@Html.ActionLink("Caisse", "Caisse", "Cart")</li>
+             </ul>
+                        </div>
+                    </div>
+}
+
+@if (ViewData["IsAuthenticated"] != null && true.Equals(ViewData["IsAuthenticated"]))
+{
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Chat</h3>
+            </div>
+            <div class="panel-body">
+                <div id="chat-container">
+                    <ul id="chat-messages" data-user-name="@ViewBag.UserName">
+                        <!-- Chat messages will be displayed here -->
+                    </ul>
+                    <form id="chat-form">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="chat-message-input" placeholder="Enter message">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    }

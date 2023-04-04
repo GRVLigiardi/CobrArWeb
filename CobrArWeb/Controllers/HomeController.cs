@@ -1,5 +1,6 @@
 ﻿using CobrArWeb.Data;
 using CobrArWeb.Models;
+using CobrArWeb.Models.Chat;
 using CobrArWeb.Models.Views.Common;
 using CobrArWeb.Models.Views.Home;
 using CobrArWeb.Services;
@@ -14,10 +15,13 @@ namespace CobrArWeb.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IAuthenticationService _authenticationService;
+        private readonly CobrArWebContext _context;
+        private string _currentUserEmail;
 
         public HomeController(ILogger<HomeController> logger, CobrArWebContext context,
             IAuthenticationService authenticationService)
         {
+            _context = context;
             _authenticationService = authenticationService;
             _logger = logger;
         }
@@ -55,6 +59,15 @@ namespace CobrArWeb.Controllers
             if (isAuthenticated != null)
             {
                 ViewData["IsAuthenticated"] = true;
+
+                // Get the current user by email
+                var currentUser = _context.Users.FirstOrDefault(u => u.Email == isAuthenticated);
+                if (currentUser != null)
+                {
+                    // Set the user name in ViewBag
+                    ViewBag.UserName = currentUser.Email; // Replace 'Email' with the user name property if you have one
+                    _currentUserEmail = currentUser.Email; // Store the current user email
+                }
             }
             else
             {
@@ -73,6 +86,40 @@ namespace CobrArWeb.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult GetMessages()
+        {
+            var messages = _context.Messages.Select(m => new
+            {
+                Id = m.Id,
+                UserName = m.UserName,
+                Content = m.Content,
+                Timestamp = m.Timestamp
+            }).ToList();
+
+            return Json(messages);
+        }
+
+        [HttpPost]
+        public IActionResult SendMessage(MessageViewModel messageViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var message = new Message
+                {
+                    UserName = messageViewModel.UserName,
+                    Content = messageViewModel.Content,
+                    Timestamp = DateTime.Now
+                };
+
+                _context.Messages.Add(message);
+                _context.SaveChanges();
+
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }

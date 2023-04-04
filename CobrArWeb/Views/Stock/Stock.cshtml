@@ -6,7 +6,12 @@
 @section scripts {
     <script src="~/js/FilterProductButtons.js"></script>
 }
-
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["message"]
+    </div>
+}
 
 <a asp-action="Create" class="btn btn-primary mb-3">Ajouter un produit</a>
     

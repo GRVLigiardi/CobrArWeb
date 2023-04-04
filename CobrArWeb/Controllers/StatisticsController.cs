@@ -1,6 +1,8 @@
 ﻿using CobrArWeb.Data;
 using CobrArWeb.Models;
+
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Net;
 
@@ -50,9 +52,9 @@ namespace CobrArWeb.Controllers
                 RevenuPeriode = "" // Vous pouvez définir cette valeur en fonction de l'affichage souhaité (par jour, semaine, mois ou année)
             };
 
-            return View(statistiques);
+           return View(statistiques);
         }
+
+       
     }
 }
-
-

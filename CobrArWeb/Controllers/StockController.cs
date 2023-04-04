@@ -1,6 +1,7 @@
 ﻿using CobrArWeb.Data;
 using CobrArWeb.Models;
 using CobrArWeb.Models.RechercheArbo;
+using CobrArWeb.Models.Statistiques;
 using CobrArWeb.Models.Stock;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -118,26 +119,37 @@ namespace CobrArWeb.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditProduct(Product product)
+        public IActionResult EditProduct(Product product, bool applyToAllSizes = false, bool applyToAllTeams = false, bool applyToAllSuppliers = false)
         {
             // Vérifier si l'ID du produit existe déjà dans la base de données
             var existingProduct = _context.Products.Find(product.Id);
-
+            UpdateOrCreateProducts(product, "UPDATE", applyToAllSizes, applyToAllTeams, applyToAllSuppliers);
             if (existingProduct != null)
             {
                 // Mettre à jour le produit existant dans la base de données
+                var oldProduct = _context.Products.AsNoTracking().First(p => p.Id == product.Id);
                 _context.Entry(existingProduct).CurrentValues.SetValues(product);
+                _context.SaveChanges();
+
+                // Ajouter l'historique de modification du produit
+                AddProductHistory(oldProduct, product, "UPDATE");
+
+                // Ajouter le message à TempData
+                TempData["message"] = $"Le produit '{product.Produit}' de l'équipe , de la taille '{_context.Tailles.Find(product.TailleId).Nom}', de prix '{product.Prix}' et de quantité '{product.Quantite}' Modifé avec succès. ";
             }
             else
             {
                 // Ajouter le nouveau produit à la base de données
                 _context.Products.Add(product);
+                _context.SaveChanges();
+
+                // Ajouter l'historique de création du produit
+                AddProductHistory(null, product, "CREATE");
             }
 
-            _context.SaveChanges();
-
-            // Rediriger vers la vue "Stock.cshtml" après l'édition
-            return RedirectToAction("Index");
+            // Retourner à la vue "EditProduct.cshtml" après l'édition
+            SetViewBagDropdownLists(product.TailleId, product.CategorieId);
+            return View("EditProduct", product);
         }
 
         [HttpGet]
@@ -150,19 +162,171 @@ namespace CobrArWeb.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateProduct(Product product)
+        public IActionResult CreateProduct(Product product, bool applyToAllSizes = false, bool applyToAllTeams = false, bool applyToAllSuppliers = false)
         {
             // Ajouter le nouveau produit à la base de données
             _context.Products.Add(product);
             _context.SaveChanges();
 
+            // Ajouter l'historique de création du produit
+            AddProductHistory(null, product, "CREATE");
+            UpdateOrCreateProducts(product, "CREATE", applyToAllSizes, applyToAllTeams, applyToAllSuppliers);
             TempData["message"] = $"Le produit '{product.Produit}' de l'équipe '{_context.Equipes.Find(product.EquipeId).Nom}', de la catégorie '{_context.Categories.Find(product.CategorieId).Nom}', de la sous-catégorie '{_context.SousCategories.Find(product.SousCategorieId).Nom}', de la taille '{_context.Tailles.Find(product.TailleId).Nom}', de prix '{product.Prix}' et de quantité '{product.Quantite}' du fournisseur '{_context.Fournisseurs.Find(product.FournisseurId).Nom}' a été ajouté avec succès.";
 
-            return View("CreateProduct", product);
+            // Retourner à la vue "CreateProduct.cshtml" après la création
+            ViewBag.CategorieList = new SelectList(_context.Categories, "Id", "Nom");
+            ViewBag.AllSubCategories = _context.SousCategories.ToList();
+            SetViewBagDropdownLists();
+            return View("CreateProduct", new Product());
         }
 
+        private void AddProductHistory(Product oldProduct, Product newProduct, string action)
+        {
+            var properties = typeof(Product).GetProperties();
+            foreach (var property in properties)
+            {
+                bool valueChanged;
 
+                if (action == "CREATE")
+                {
+                    valueChanged = newProduct != null && property.GetValue(newProduct) != null;
+                }
+                else
+                {
+                    valueChanged = (oldProduct != null && property.GetValue(oldProduct) != null) != (newProduct != null && property.GetValue(newProduct) != null);
+                }
+
+                if (valueChanged)
+                {
+                    _context.ProductHistories.Add(new ProductHistory
+                    {
+                        ProductId = newProduct.Id,
+                        Action = action,
+                        ColumnModified = property.Name,
+                        OldValue = oldProduct != null && property.GetValue(oldProduct) != null ? property.GetValue(oldProduct).ToString() : null,
+                        NewValue = newProduct != null && property.GetValue(newProduct) != null ? property.GetValue(newProduct).ToString() : null,
+                        Date = DateTime.UtcNow
+                    });
+                }
+            }
+            _context.SaveChanges();
+        }
+        public IActionResult GetAllProductHistories()
+        {
+            var groupedProductHistories = _context.ProductHistories
+                        .GroupBy(ph => ph.ProductId)
+                        .Select(group => new ProductHistoryGroupViewModel
+                        {
+                            ProductId = group.Key,
+                            Histories = group.Select(ph => new ProductHistoryViewModel
+                            {
+                                Id = ph.Id,
+                                Action = ph.Action,
+                                ColumnModified = ph.ColumnModified,
+                                OldValue = ph.OldValue,
+                                NewValue = ph.NewValue,
+                                Date = ph.Date
+                            }).ToList()
+                        });
+
+            return PartialView("_ProductHistories", groupedProductHistories.ToList());
+        }
+
+        private void UpdateOrCreateProducts(Product product, string action, bool applyToAllSizes, bool applyToAllTeams, bool applyToAllSuppliers)
+        {
+            // Récupérer les produits concernés en fonction des options sélectionnées
+            var productsToUpdate = _context.Products
+                .Where(p => p.CategorieId == product.CategorieId && p.SousCategorieId == product.SousCategorieId)
+                .AsQueryable();
+
+            var allTeams = _context.Equipes.ToList();
+
+            if (!applyToAllSizes)
+            {
+                productsToUpdate = productsToUpdate.Where(p => p.TailleId == product.TailleId);
+            }
+
+            if (!applyToAllTeams)
+            {
+                productsToUpdate = productsToUpdate.Where(p => p.EquipeId == product.EquipeId);
+            }
+
+            if (!applyToAllSuppliers)
+            {
+                productsToUpdate = productsToUpdate.Where(p => p.FournisseurId == product.FournisseurId);
+            }
+
+            // Mettre à jour ou créer les produits concernés
+            foreach (var prodToUpdate in productsToUpdate)
+            {
+                if (action == "UPDATE")
+                {
+                    // Mettre à jour les champs du produit
+                    var oldProduct = _context.Products.AsNoTracking().First(p => p.Id == prodToUpdate.Id);
+                    var updatedProduct = new Product
+                    {
+                        Id = prodToUpdate.Id,
+                        CategorieId = product.CategorieId,
+                        SousCategorieId = product.SousCategorieId,
+                        EquipeId = applyToAllTeams ? prodToUpdate.EquipeId : product.EquipeId,
+                        TailleId = applyToAllSizes ? prodToUpdate.TailleId : product.TailleId,
+                        FournisseurId = applyToAllSuppliers ? prodToUpdate.FournisseurId : product.FournisseurId,
+                        Produit = product.Produit,
+                        Prix = product.Prix,
+                        Quantite = product.Quantite
+                    };
+
+                    _context.Entry(prodToUpdate).CurrentValues.SetValues(updatedProduct);
+                    _context.SaveChanges();
+                    AddProductHistory(oldProduct, updatedProduct, "UPDATE");
+                }
+                else if (action == "CREATE")
+                {
+                    if (applyToAllTeams)
+                    {
+                        foreach (var team in allTeams)
+                        {
+                            var newProduct = new Product
+                            {
+                                CategorieId = product.CategorieId,
+                                SousCategorieId = product.SousCategorieId,
+                                EquipeId = team.Id,
+                                TailleId = applyToAllSizes ? prodToUpdate.TailleId : product.TailleId,
+                                FournisseurId = applyToAllSuppliers ? prodToUpdate.FournisseurId : product.FournisseurId,
+                                Produit = product.Produit,
+                                Prix = product.Prix,
+                                Quantite = product.Quantite
+                            };
+
+                            _context.Products.Add(newProduct);
+                            _context.SaveChanges();
+
+                            // Ajouter l'historique de création du produit
+                            AddProductHistory(null, newProduct, "CREATE");
+                        }
+                    }
+                    else
+                    {
+                        var newProduct = new Product
+                        {
+                            CategorieId = product.CategorieId,
+                            SousCategorieId = product.SousCategorieId,
+                            EquipeId = product.EquipeId,
+                            TailleId = applyToAllSizes ? prodToUpdate.TailleId : product.TailleId,
+                            FournisseurId = applyToAllSuppliers ? prodToUpdate.FournisseurId : product.FournisseurId,
+                            Produit = product.Produit,
+                            Prix = product.Prix,
+                            Quantite = product.Quantite
+                        };
+
+                        _context.Products.Add(newProduct);
+                        _context.SaveChanges();
+
+                        // Ajouter l'historique de création du produit
+                        AddProductHistory(null, newProduct, "CREATE");
+                    }
+                }
+            }
+        }
     }
-    }
-
-
+}
