@@ -12,25 +12,33 @@ namespace CobrArWeb.Services
             _Context = context;
         }
 
-        public bool AuthenticateUser(string login, string password)
+        public User AuthenticateUser(string name, string password)
         {
-            var user = _Context.Users.FirstOrDefault(item => item.Email == login);
+            var user = _Context.Users.FirstOrDefault(item => item.Name == name);
             if (user == null)
             {
-                return false;
+                return null;
             }
             var hashPassword = HashPassword(password, "SALT");
-            return user.HashPassword == hashPassword;
+            if (user.HashPassword == hashPassword)
+            {
+                return user;
+            }
+            return null;
         }
 
-        public void CreateUser(string login, string password)
+        public void CreateUser(string login, string name, string password, UserRole userRole)
         {
-            var user = _Context.Users.FirstOrDefault(item => item.Email == login);
-            if (user == null)
+            var user = new User
             {
-                _Context.Users.Add(new User() { Email = login, HashPassword = HashPassword(password, "SALT") });
-                _Context.SaveChanges();
-            }
+                Email = login,
+                Name = name,
+                HashPassword = HashPassword(password, "SALT"),
+                UserRole = userRole
+            };
+
+            _Context.Users.Add(user);
+            _Context.SaveChanges();
         }
 
         private string HashPassword(string input, string salt)

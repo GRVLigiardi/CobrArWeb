@@ -3,6 +3,9 @@
 @using CobrArWeb.Models.RechercheArbo;
 @model StockViewModel
 
+@{
+    Layout = "_Layout";
+}
 @section scripts {
     <script src="~/js/FilterProductButtons.js"></script>
 }
@@ -13,10 +16,12 @@
     </div>
 }
 
-<a asp-action="Create" class="btn btn-primary mb-3">Ajouter un produit</a>
-    
-                        
+
                         @Html.Partial("~/Views/Product/List.cshtml", Model.ListViewModel)
 
+@if (ViewData["IsAdmin"] != null && true.Equals(ViewData["IsAdmin"]))
+{
+    <a asp-action="Create" class="btn btn-primary mb-3">Ajouter un produit</a>
+}
 
         <script src="~/js/site.js" asp-append-version="true"></script>

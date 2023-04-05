@@ -1,4 +1,5 @@
-﻿@{
+﻿@using CobrArWeb.Data;
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -15,7 +16,7 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Bienvenue sur CobrAR "USER"</h3>
+                        <h3 class="panel-title">Bienvenue sur CobrAR @ViewBag.UserName</h3>
                     </div>
 
                     <div class="panel-body">
@@ -25,7 +26,7 @@
                             {
                                 <fieldset>
                                     <div class="form-group">
-                                        <input class="form-control" placeholder="yourmail@example.com" name="email" type="text">
+                                        <input class="form-control" placeholder="Nom d'utilisateur" name="name" type="text">
                                     </div>
                                     <div class="form-group">
                                         <input class="form-control" placeholder="Password" name="password" type="password" value="">
@@ -67,6 +68,8 @@
 
 @if (ViewData["IsAuthenticated"] != null && true.Equals(ViewData["IsAuthenticated"]))
 {
+ 
+    <input type="hidden" id="current-user-name" value="@ViewBag.UserName" />
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -74,6 +77,9 @@
             </div>
             <div class="panel-body">
                 <div id="chat-container">
+                    <li>
+                        <span class="message-user-name"></span>: <span class="message-content">Votre message</span>
+                    </li>
                     <ul id="chat-messages" data-user-name="@ViewBag.UserName">
                         <!-- Chat messages will be displayed here -->
                     </ul>
@@ -82,7 +88,15 @@
                             <input type="text" class="form-control" id="chat-message-input" placeholder="Enter message">
                         </div>
                         <button type="submit" class="btn btn-primary">Send</button>
+                        @if (ViewData["IsAuthenticated"] != null && true.Equals(ViewData["IsAuthenticated"]) && ViewBag.UserRole == UserRole.Admin)
+                        {
+                            @if (ViewData["IsAdmin"] != null && true.Equals(ViewData["IsAdmin"]))
+                            {
+                                <button type="button" class="btn btn-danger" onclick="if (confirm('Êtes-vous sûr de vouloir supprimer tous les messages ?')) { window.location.href='@Url.Action("DeleteMessages", "Home")' }">Supprimer tous les messages</button>
+                            }
+                        }
                     </form>
+                  
                 </div>
             </div>
         </div>

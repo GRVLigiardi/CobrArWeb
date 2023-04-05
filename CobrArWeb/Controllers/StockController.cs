@@ -60,8 +60,13 @@ namespace CobrArWeb.Controllers
                 {
                     EquipeViewModelList = GetEquipeViewModelList()
                 }
-            };
 
+            };
+            var userRole = HttpContext.Session.GetString("UserRole");
+            if (userRole == "Admin")
+            {
+                ViewData["IsAdmin"] = true;
+            }
             SetViewBagDropdownLists();
             ViewBag.IsStockView = true;
             return View("Stock", viewModel);

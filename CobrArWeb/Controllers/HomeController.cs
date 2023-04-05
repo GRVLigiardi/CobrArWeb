@@ -26,29 +26,30 @@ namespace CobrArWeb.Controllers
             _logger = logger;
         }
 
-        public IActionResult Login(LoginVM loginVM) 
+        public IActionResult Login(LoginVM loginVM)
         {
-            bool isAutheticated = _authenticationService.AuthenticateUser(loginVM.Email, loginVM.Password);
-            if (isAutheticated)
+            User authenticatedUser = _authenticationService.AuthenticateUser(loginVM.Name, loginVM.Password);
+            if (authenticatedUser != null)
             {
-                HttpContext.Session.SetString("IsAuthenticated", loginVM.Email);
+                HttpContext.Session.SetString("IsAuthenticated", authenticatedUser.Email);
+                HttpContext.Session.SetString("UserRole", authenticatedUser.UserRole.ToString());
                 return RedirectToAction("Index");
             }
             else
             {
-                return RedirectToAction("Index", new ErrorVM() { ErrorTag = "ERR_LOGIN", ErrorText = "Invalid login or password" });
+                return RedirectToAction("Index", new ErrorVM() { ErrorTag = "ERR_LOGIN", ErrorText = "Nom d'utilisateur ou mot de passe incorrect" });
             }
         }
 
         public IActionResult CreateUser(LoginVM loginVM)
         {
-            if (loginVM == null || string.IsNullOrWhiteSpace(loginVM.Email))
+            if (loginVM == null || string.IsNullOrWhiteSpace(loginVM.Email) || string.IsNullOrWhiteSpace(loginVM.Name))
             {
                 return View();
             }
             else
             {
-                _authenticationService.CreateUser(loginVM.Email, loginVM.Password);
+                _authenticationService.CreateUser(loginVM.Email, loginVM.Name, loginVM.Password, loginVM.UserRole);
                 return RedirectToAction("Index");
             }
         }
@@ -56,6 +57,7 @@ namespace CobrArWeb.Controllers
         public IActionResult Index(ErrorVM errorVM)
         {
             var isAuthenticated = HttpContext.Session.GetString("IsAuthenticated");
+            var userRole = HttpContext.Session.GetString("UserRole");
             if (isAuthenticated != null)
             {
                 ViewData["IsAuthenticated"] = true;
@@ -64,9 +66,20 @@ namespace CobrArWeb.Controllers
                 var currentUser = _context.Users.FirstOrDefault(u => u.Email == isAuthenticated);
                 if (currentUser != null)
                 {
-                    // Set the user name in ViewBag
-                    ViewBag.UserName = currentUser.Email; // Replace 'Email' with the user name property if you have one
-                    _currentUserEmail = currentUser.Email; // Store the current user email
+                    // Set the user name and role in ViewBag
+                    ViewBag.UserName = currentUser.Name;
+                    ViewBag.UserRole = Enum.Parse<UserRole>(userRole);
+                    _currentUserEmail = currentUser.Email;
+
+                    // Check if the user is an admin
+                    if (currentUser.UserRole == UserRole.Admin)
+                    {
+                        ViewData["IsAdmin"] = true;
+                    }
+                    else
+                    {
+                        ViewData["IsAdmin"] = false;
+                    }
                 }
             }
             else
@@ -75,11 +88,6 @@ namespace CobrArWeb.Controllers
             }
 
             return View(errorVM);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -120,6 +128,22 @@ namespace CobrArWeb.Controllers
             }
 
             return BadRequest();
+        }
+
+        public IActionResult DeleteMessages()
+        {
+            var messages = _context.Messages.ToList();
+            _context.Messages.RemoveRange(messages);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("IsAuthenticated");
+            HttpContext.Session.Remove("UserRole");
+            return RedirectToAction("Index");
         }
     }
 }
