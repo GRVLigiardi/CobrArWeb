@@ -8,5 +8,6 @@ namespace CobrArWeb.Models.Views.Home
         public string Password { get; set; }
         public string Name { get; set; }
         public UserRole UserRole { get; set; }
+         public string AdminAccessCode { get; set; }
     }
 }

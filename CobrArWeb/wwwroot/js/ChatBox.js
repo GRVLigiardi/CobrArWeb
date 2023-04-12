@@ -1,3 +1,6 @@
+var userName = document.getElementById("user-name").value;
+
+
 $(document).ready(function () {
     // Load chat messages on page load
     loadChatMessages();
@@ -25,8 +28,8 @@ function loadChatMessages() {
             var messages = response.$values; // Ajoutez cette ligne pour accéder à $values
 
             messages.forEach(function (message) {
-                var userName = message.userName === currentUser ? "@ViewBag.UserName" : message.userName;
-                var messageHtml = `<li><strong>${userName}:</strong> ${message.content}</li>`; // Change message.userName to userName
+                var userName = message.userName === currentUser ? message.userName : message.userName;
+                var messageHtml = `<li><strong>${userName}:</strong> ${message.content}</li>`;
                 $("#chat-messages").append(messageHtml);
             });
 
@@ -46,7 +49,7 @@ function sendMessage(content) {
         url: "/Home/SendMessage",
         type: "POST",
         data: {
-            userName: "@ViewBag.UserName", // Replace with the actual user name from ViewBag
+            userName: userName, 
             content: content
         },
         success: function () {

@@ -41,18 +41,35 @@ namespace CobrArWeb.Controllers
             }
         }
 
-        public IActionResult CreateUser(LoginVM loginVM)
+        [HttpPost]
+        public IActionResult CreateUserPost(LoginVM loginVM)
         {
+            const string expectedAdminAccessCode = "Futbol";
+
             if (loginVM == null || string.IsNullOrWhiteSpace(loginVM.Email) || string.IsNullOrWhiteSpace(loginVM.Name))
             {
-                return View();
+                return View("CreateUser");
             }
             else
             {
-                _authenticationService.CreateUser(loginVM.Email, loginVM.Name, loginVM.Password, loginVM.UserRole);
-                return RedirectToAction("Index");
+                if (loginVM.AdminAccessCode == expectedAdminAccessCode)
+                {
+                    _authenticationService.CreateUser(loginVM.Email, loginVM.Name, loginVM.Password, loginVM.UserRole);
+                    return RedirectToAction("CreateUser");
+                }
+                else
+                {
+                    return RedirectToAction("Index", new ErrorVM() { ErrorTag = "ERR_ACCESS_CODE", ErrorText = "Code d'accès incorrect" });
+                }
             }
         }
+
+        [HttpGet]
+        public IActionResult CreateUser()
+        {
+            return View();
+        }
+
 
         public IActionResult Index(ErrorVM errorVM)
         {

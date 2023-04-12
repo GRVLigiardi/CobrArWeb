@@ -4,22 +4,23 @@
 @section scripts {
     <script src="~/js/FilterProductButtons.js" asp-append-version="true"></script>
 }
+<head>
+    <link href="~/css/Search.css" rel="stylesheet" asp-append-version="true" />
+</head>
 
 <div class="container-fluid">
     <div class="row no-gutters">
         <div class="col-md-3 p-0 m-0" style="display:flex;">
             <div class="team-buttons">
-            
-          
-                <button id="central-button" data-team-id="1">Rosario Central</button>
-                <button id="boca-button" data-team-id="3">Boca Juniors</button>
-                <button id="newells-button" data-team-id="2">Newell's Old Boys</button>
-                <button id="river-button" data-team-id="4">River Plate</button>
-                <button id="sanlorenzo-button" data-team-id="7">San Lorenzo</button>
-                <button id="independiente-button" data-team-id="5">Independiente</button>
-                <button id="racing-button" data-team-id="6">Racing Club</button>
-                <button id="afa-button" data-team-id="8">Selection Argentine</button>
-                <button id="otros-button" data-team-id="9">Otros</button>
+                <button id="central-button" data-team-id="1"></button>
+                <button id="boca-button" data-team-id="3"> </button>
+                <button id="newells-button" data-team-id="2"></button>
+                <button id="river-button" data-team-id="4"></button>
+                <button id="sanlorenzo-button" data-team-id="7"></button>
+                <button id="independiente-button" data-team-id="5"></button>
+                <button id="racing-button" data-team-id="6"> </button>
+                <button id="afa-button" data-team-id="8"> </button>
+                <button id="otros-button" data-team-id="9"></button>
             </div>
             <div class="cat-buttons">
                 <button id="maillot-button" data-category-id="1">Maillots</button>
@@ -69,7 +70,13 @@
                                 {
                                     @foreach (var product in souscategory.Products)
                                     {
-                                                    <tr class="table-responsive-md" data-team-id="@product.EquipeId" data-category-id="@product.CategorieId" data-sub-category-id="@product.SousCategorieId" data-sub-category-name="@product.SousCategorie.Nom">
+                                        var classToAdd = "table-responsive-md";
+                                        if(product.Quantite == 0)
+{
+                                            classToAdd = "table-responsive-md out-of-stock";
+                                        }
+
+                                        <tr class="@classToAdd" data-team-id="@product.EquipeId" data-category-id="@product.CategorieId" data-sub-category-id="@product.SousCategorieId" data-sub-category-name="@product.SousCategorie.Nom">
                                                         <td>@equipe.Equipe</td>
                                                         <td>@product.Produit</td>
                                                         <td>@category.Categorie</td>

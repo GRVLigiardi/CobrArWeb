@@ -1,0 +1,256 @@
+﻿.team-buttons,
+.cat-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+button {
+    width: 100px;
+    height: 100px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.products-window,
+{
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 20px;
+}
+
+#product-table th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+#product-table td {
+    vertical-align: middle;
+}
+
+#product-table tbody tr {
+    cursor: pointer;
+}
+
+.team-buttons, .cat-buttons, .subcat-buttons {
+    overflow: hidden;
+}
+
+.team-buttons {
+    display:flex;
+    align-content:center;
+}
+
+button {
+    font-family: Britannic;
+}
+
+.team-button {
+    display:inline-block;
+}
+
+button svg {
+    display: block;
+    margin: auto;
+}
+
+#central-button {
+    background-image: url(/Images/LogosClubs/rosario-central-logo.svg);
+    margin-left: 5%;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 90%;
+    height: 75px;
+    transition: background-color 0.3s ease;
+}
+
+    #central-button:hover {
+        background-size: 95%;
+        background-color: #ccc;
+    }
+
+
+#newells-button {
+    background-image: url(/Images/LogosClubs/newells-old-boys-logo.svg);
+    margin-left: 5%;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    height: 75px;
+    transition: background-color 0.3s ease;
+}
+
+    #newells-button:hover {
+        background-size: 104%;
+        background-color: #ccc;
+    }
+
+#boca-button {
+    background-image: url(/Images/LogosClubs/boca-juniors-logo.svg);
+    margin-left: 5%;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 75px;
+    height: 75px;
+    transition: background-color 0.3s ease;
+}
+
+    #boca-button:hover {
+        background-size: 104%;
+        background-color: #ccc;
+    }
+
+#river-button {
+    background-image: url(/Images/LogosClubs/river-plate-logo.svg);
+    margin-left: 5%;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 75px;
+    height: 70px;
+    transition: background-color 0.3s ease;
+}
+
+    #river-button:hover {
+        background-size: 104%;
+        background-color: #ccc;
+    }
+
+#sanlorenzo-button {
+    background-image: url(/Images/LogosClubs/san-lorenzo-logo.svg);
+    margin-left: 5%;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 75px;
+    height: 70px;
+    transition: background-color 0.3s ease;
+}
+}
+
+    #sanlorenzo-button:hover {
+        background-size: 104%;
+        background-color: #ccc;
+    }
+
+
+#independiente-button {
+    background-image: url(/Images/LogosClubs/independiente-logo.svg);
+    margin-left: 5%;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 65px;
+    height: 60px;
+    transition: background-color 0.3s ease;
+}
+}
+
+    #independiente-button:hover {
+        background-size: 104%;
+        background-color: #ccc;
+    }
+
+#racing-button {
+    background-image: url(/Images/LogosClubs/racing-logo-escudo.svg);
+    margin-left: 5%;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 65px;
+    height: 60px;
+    transition: background-color 0.3s ease;
+}
+}
+
+    #racing-button:hover {
+        background-size: 104%;
+        background-color: #ccc;
+    }
+
+#afa-button {
+    background-image: url(/Images/LogosClubs/argentina-logo.svg);
+    margin-left: 5%;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 75px;
+    height: 90px;
+    transition: background-color 0.3s ease;
+}
+}
+
+    #afa-button:hover {
+        background-size: 104%;
+        background-color: #ccc;
+    }
+
+#otros-button {
+    background-image: url(/Images/LogosClubs/conmebol-logo.svg);
+    margin-left: 5%;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 75px;
+    height: 75px;
+    transition: background-color 0.3s ease;
+}
+}
+
+    #otros-button:hover {
+        background-color: yellowgreen;
+        color: black;
+    }
+
+.main-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 10px;
+}
+
+
+.products-window {
+    height: 60vh;
+    overflow-y: auto;
+}

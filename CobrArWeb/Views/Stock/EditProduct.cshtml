@@ -3,6 +3,7 @@
 @section Scripts {
             <script src="~/js/FilterStockLists.js" ></script>
     <script src="~/js/ApplyToAllSizes.js"></script>
+
 }
 
 
@@ -17,27 +18,12 @@
         <input asp-for="Produit" class="form-control" />
         <span asp-validation-for="Produit" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label for="CategorieId">Categorie</label>
-        <select asp-for="CategorieId" asp-items="ViewBag.CategorieList" id="categorie-dropdown" class="form-control" disabled>
-            <option value="">Sélectionnez une catégorie</option>
-        </select>
-    </div>
+    <input type="hidden" asp-for="CategorieId" />
 
-    <div class="form-group">
-        <label for="SousCategorieId">SousCategorie</label>
-        <select asp-for="SousCategorieId" asp-items="ViewBag.SousCategorieList" id="souscategorie-dropdown" class="form-control" disabled>
-            <option value="">Sélectionnez une sous-catégorie</option>
-        </select>
-    </div>
+    <input type="hidden" asp-for="SousCategorieId" />
 
-    <div class="form-group">
-        <label for="EquipeId">Equipe</label>
-        <select asp-for="EquipeId" asp-items="ViewBag.EquipeList" class="form-control" disabled>
-            <option value="">Sélectionnez une équipe</option>
-        </select>
-  
-
+    <input type="hidden" asp-for="EquipeId" />
+   
     <div class="form-group">
         <label asp-for="TailleId" class="control-label"></label>
         <select asp-for="TailleId" asp-items="@ViewBag.TailleList" class="form-control"></select>

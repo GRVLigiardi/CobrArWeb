@@ -10,6 +10,8 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Création de compte</h3>
                     </div>
+                    <form asp-controller="Home" asp-action="CreateUserPost" method="post">
+                  
                     <div class="panel-body">
                         @using (Html.BeginForm("CreateUser", "Home"))
                         {
@@ -44,6 +46,9 @@
                                 @Model.ErrorText
                             </div>
                         }
+
+
+                    </form>
                     </div>
                 </div>
             </div>

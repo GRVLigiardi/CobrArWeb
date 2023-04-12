@@ -4,6 +4,13 @@
 
 <table class="table">
     <thead>
+        <div>
+            <a asp-controller="Cart" asp-action="Caisse" asp-route-filterType="all">Tous</a> |
+            <a asp-controller="Cart" asp-action="Caisse" asp-route-filterType="day">Jour</a> |
+            <a asp-controller="Cart" asp-action="Caisse" asp-route-filterType="week">Semaine</a> |
+            <a asp-controller="Cart" asp-action="Caisse" asp-route-filterType="month">Mois</a>
+        </div>
+
         <tr>
             <th>Date et heure</th>
             <th>Equipe</th>

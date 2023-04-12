@@ -5,18 +5,17 @@
 
 @section scripts {
     <script src="~/js/ChatBox.js" asp-append-version="true"></script>
-
-
+    <script src="~/js/CreateUserPasswordCheck.js" asp-append-version="true"></script>
 }
+<head>
+
+    <link href="~/css/Home.css" rel="stylesheet" asp-append-version="true" />
+
+</head>
 
 
-<div class="text-center">
     <div class="container">
-        <div class="row">
-            <div class="col-md-4 col-md-offset-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Bienvenue sur CobrAR @ViewBag.UserName</h3>
+                          <h1 class="panel-title">Bienvenue sur CobrAR @ViewBag.UserName</h1>
                     </div>
 
                     <div class="panel-body">
@@ -26,16 +25,41 @@
                             {
                                 <fieldset>
                                     <div class="form-group">
-                                        <input class="form-control" placeholder="Nom d'utilisateur" name="name" type="text">
+                                        <input class="form-control-login" placeholder="Nom d'utilisateur" name="name" type="text">
                                     </div>
                                     <div class="form-group">
-                                        <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                    <input class="form-control-login" placeholder="Mot De Passe" name="password" type="password" value="">
                                     </div>
 
                                     <input class="btn btn-lg btn-success btn-block" type="submit" value="Login">
                                 </fieldset>
-                                <span>ou créez un compte : </span>
-                                @Html.ActionLink("Creez un compte", "CreateUser", "Home")
+
+                        
+            @Html.ActionLink("Créez un compte", "CreateUser", "Home", null, new { id = "createAccountLink" })
+
+            <div id="adminAccessCodeModal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Code d'accès administrateur</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="AdminAccessCode">Code d'accès administrateur</label>
+                                <input type="password" class="form-control" id="AdminAccessCode" name="AdminAccessCode">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="checkAccessCode">Vérifier</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                             
                             }
                             @if (Model != null && !string.IsNullOrWhiteSpace(Model.ErrorText))
                             {
@@ -51,43 +75,43 @@
     </div>
 </div>
 
- @if (ViewData["IsAuthenticated"] != null && true.Equals(ViewData["IsAuthenticated"]))
+@if (ViewData["IsAuthenticated"] != null && true.Equals(ViewData["IsAuthenticated"]))
 {
     <div class="panel panel-default">
         <div class="panel-heading">
-                            <h3 class="panel-title">Accès rapide</h3>
-                        </div>
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked">
-                <li>@Html.ActionLink("List", "List", "Product")</li>
-                <li>@Html.ActionLink("Caisse", "Caisse", "Cart")</li>
-             </ul>
-                        </div>
-                    </div>
+            <h3 class="panel-title"></h3>
+        </div>
+        <div class="panel-body">
+            <div class="center-buttons">
+                <a class="center-button" href="@Url.Action("List", "Product")" class="btn btn-primary">Produits</a>
+                <a class="center-button" href="@Url.Action("Caisse", "Cart")" class="btn btn-primary">Caisse</a>
+            </div>
+        </div>
+    </div>
 }
+
 
 @if (ViewData["IsAuthenticated"] != null && true.Equals(ViewData["IsAuthenticated"]))
 {
- 
-    <input type="hidden" id="current-user-name" value="@ViewBag.UserName" />
+
+    <input type="hidden" id="user-name" value="@ViewBag.UserName" />
+
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Chat</h3>
             </div>
             <div class="panel-body">
+                <div class="chat-box">
                 <div id="chat-container">
-                    <li>
-                        <span class="message-user-name"></span>: <span class="message-content">Votre message</span>
-                    </li>
+                    
                     <ul id="chat-messages" data-user-name="@ViewBag.UserName">
-                        <!-- Chat messages will be displayed here -->
+                      
                     </ul>
                     <form id="chat-form">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="chat-message-input" placeholder="Enter message">
+                            <input type="text" class="form-control" id="chat-message-input" placeholder="Entrez votre message">
                         </div>
-                        <button type="submit" class="btn btn-primary">Send</button>
+                        <button type="submit" class="btn btn-primary">Envoyer</button>
                         @if (ViewData["IsAuthenticated"] != null && true.Equals(ViewData["IsAuthenticated"]) && ViewBag.UserRole == UserRole.Admin)
                         {
                             @if (ViewData["IsAdmin"] != null && true.Equals(ViewData["IsAdmin"]))
@@ -96,7 +120,7 @@
                             }
                         }
                     </form>
-                  
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
 html {
   font-size: 14px;
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
@@ -8,6 +9,14 @@ html {
   html {
     font-size: 16px;
   }
+}
+
+td, th{
+    color:aliceblue;
+}
+
+h5, p{
+    color:black;
 }
 
 
@@ -21,11 +30,16 @@ html {
   min-height: 100%;
 }
 
+li{
+    color:black;
+}
+
 body {
+    color:ghostwhite;
     margin-left:0px;
     margin-right :0px;
     margin-bottom: 60px;
-    background-color: antiquewhite;
+    background-color: black;
 }
 
     body::after {
@@ -40,316 +54,3 @@ body {
         z-index: -1;
     }
 
-.team-buttons,
-.cat-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.button {
-    width: 80%;
-}
-
-.products-window,
-{
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    padding: 20px;
-}
-
-#product-table th {
-    text-align: center;
-    vertical-align: middle;
-}
-
-#product-table td {
-    vertical-align: middle;
-}
-
-#product-table tbody tr {
-    cursor: pointer;
-}
-
-.team-buttons, .cat-buttons, .subcat-buttons {
-    overflow: hidden;
-}
-button{
-    font-family:Britannic;
-
-}
-
-.team-button{
-    w
-   display:inline-block;
-
-}
-
-
-#central-button {
-    background-color: yellow;
-    color: blue;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-    #central-button:hover {
-        background-color: blue;
-        color: yellow;
-        
-    }
-
-#newells-button {
-    background-color: red;
-    color: black;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-    #newells-button:hover {
-        background-color: black;
-        color: red;
-    }
-
-#boca-button {
-    background-color: mediumblue;
-    color: yellow;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-    #boca-button:hover {
-        background-color: yellow;
-        color: black;
-    }
-
-#river-button {
-    background-color: red;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-    #river-button:hover {
-        background-color: whitesmoke;
-        color: red;
-    }
-
-#sanlorenzo-button {
-    background-color: indianred;
-    color: darkblue;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-    #sanlorenzo-button:hover {
-        background-color: darkblue;
-        color: red;
-    }
-
-
-#independiente-button {
-    background-color: red;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-    #independiente-button:hover {
-        background-color: whitesmoke;
-        color: red;
-    }
-
-#racing-button {
-    background-color: cornflowerblue;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-    #racing-button:hover {
-        background-color: whitesmoke;
-        color: dodgerblue;
-    }
-
-#afa-button {
-    background-color: dodgerblue;
-    color: floralwhite;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-    #afa-button:hover {
-        background-color: deepskyblue;
-        color: yellow;
-    }
-
-#otros-button {
-    background-color: green;
-    color: floralwhite;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-    #otros-button:hover {
-        background-color: yellowgreen;
-        color: black;
-    }
-
-    #clear-button{
-        background-color: black;
-        color: floralwhite;
-        border: none;
-        border-radius: 5px;
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        margin-right: 10px;
-        margin-left: 10px;
-    }
-
-#clear-button:hover {
-    background-color: black;
-    color: yellow;
-}
-
-.main-container {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    gap: 10px;
-}
-
-
-.products-window {
-    height: 60vh;
-    overflow-y: auto;
-}
-
-.chat-box {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    width: 300px;
-    background-color: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    display: none;
-}
-
-.chat-header {
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-bottom: 1px solid #ccc;
-}
-
-    .chat-header h4 {
-        margin: 0;
-        display: inline;
-    }
-
-.chat-close {
-    float: right;
-    background: none;
-    border: none;
-}
-
-.chat-body {
-    max-height: 200px;
-    overflow-y: auto;
-    padding: 10px;
-}
-
-.chat-messages {
-    list-style: none;
-    padding: 0;
-}
-
-.chat-footer {
-    padding: 10px;
-    border-top: 1px solid #ccc;
-}
-
-.chat-input {
-    width: 80%;
-    padding: 5px;
-}
-
-.chat-send {
-    width: 20%;
-}

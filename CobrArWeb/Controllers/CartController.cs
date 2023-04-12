@@ -364,10 +364,33 @@ namespace CobrArWeb.Controllers
         }
 
         [Route("caisse")]
-        public IActionResult Caisse()
+        public IActionResult Caisse(string filterType = "all")
         {
-            var ventes = _context.Ventes.Include(v => v.Product).Include(v => v.MDP).OrderByDescending(v => v.Date).ToList();
+            DateTime now = DateTime.Now;
+            DateTime startDate = now;
 
+            switch (filterType.ToLower())
+            {
+                case "day":
+                    startDate = now.Date;
+                    break;
+                case "week":
+                    startDate = now.AddDays(-(int)now.DayOfWeek + (int)DayOfWeek.Monday).Date;
+                    break;
+                case "month":
+                    startDate = new DateTime(now.Year, now.Month, 1);
+                    break;
+                default:
+                    startDate = DateTime.MinValue;
+                    break;
+            }
+
+            var ventes = _context.Ventes
+                .Include(v => v.Product)
+                .Include(v => v.MDP)
+                .Where(v => v.Date >= startDate)
+                .OrderByDescending(v => v.Date)
+                .ToList();
             return View(ventes);
         }
 

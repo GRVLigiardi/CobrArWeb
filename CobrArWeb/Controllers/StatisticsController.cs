@@ -24,7 +24,6 @@ namespace CobrArWeb.Controllers
                 TotalVentes = _context.Ventes.Sum(v => v.Quantity),
                 TotalRevenue = _context.Ventes.Sum(v => v.Quantity * v.Prix.GetValueOrDefault()),
 
-                // Ajoutez les nouvelles statistiques ici
                 EquipeLaPlusVendue = _context.Ventes
                     .GroupBy(v => v.Equipe)
                     .OrderByDescending(g => g.Sum(v => v.Quantity))
@@ -52,9 +51,9 @@ namespace CobrArWeb.Controllers
                 RevenuPeriode = "" // Vous pouvez définir cette valeur en fonction de l'affichage souhaité (par jour, semaine, mois ou année)
             };
 
-           return View(statistiques);
+            return View(statistiques);
         }
 
-       
+
     }
 }
