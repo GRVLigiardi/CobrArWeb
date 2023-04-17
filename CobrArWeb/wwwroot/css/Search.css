@@ -57,7 +57,7 @@ button svg {
 }
 
 #central-button {
-    background-image: url(/Images/LogosClubs/rosario-central-logo.svg);
+    background-image: url(/Images/LogosClubs/ROS.png);
     margin-left: 5%;
     background-color: transparent;
     background-repeat: no-repeat;
@@ -98,7 +98,7 @@ button svg {
     }
 
 #boca-button {
-    background-image: url(/Images/LogosClubs/boca-juniors-logo.svg);
+    background-image: url(/Images/LogosClubs/BOC.png);
     margin-left: 5%;
     background-color: transparent;
     background-repeat: no-repeat;
@@ -118,7 +118,7 @@ button svg {
     }
 
 #river-button {
-    background-image: url(/Images/LogosClubs/river-plate-logo.svg);
+    background-image: url(/Images/LogosClubs/RIV.png);
     margin-left: 5%;
     background-color: transparent;
     background-repeat: no-repeat;
@@ -138,7 +138,7 @@ button svg {
     }
 
 #sanlorenzo-button {
-    background-image: url(/Images/LogosClubs/san-lorenzo-logo.svg);
+    background-image: url(/Images/LogosClubs/SLO.png);
     margin-left: 5%;
     background-color: transparent;
     background-repeat: no-repeat;
@@ -160,7 +160,7 @@ button svg {
 
 
 #independiente-button {
-    background-image: url(/Images/LogosClubs/independiente-logo.svg);
+    background-image: url(/Images/LogosClubs/CAI.png);
     margin-left: 5%;
     background-color: transparent;
     background-repeat: no-repeat;
@@ -181,7 +181,7 @@ button svg {
     }
 
 #racing-button {
-    background-image: url(/Images/LogosClubs/racing-logo-escudo.svg);
+    background-image: url(/Images/LogosClubs/RAC.png);
     margin-left: 5%;
     background-color: transparent;
     background-repeat: no-repeat;
@@ -202,7 +202,7 @@ button svg {
     }
 
 #afa-button {
-    background-image: url(/Images/LogosClubs/argentina-logo.svg);
+    background-image: url(/Images/LogosClubs/AFA.png);
     margin-left: 5%;
     background-color: transparent;
     background-repeat: no-repeat;
@@ -223,7 +223,7 @@ button svg {
     }
 
 #otros-button {
-    background-image: url(/Images/LogosClubs/conmebol-logo.svg);
+    background-image: url(/Images/LogosClubs/OTR.png);
     margin-left: 5%;
     background-color: transparent;
     background-repeat: no-repeat;

@@ -109,13 +109,15 @@
             <input type="text" id="montantCarteCadeau" name="montantCarteCadeau" />
             <button type="submit" class="btn btn-primary" id="carteCadeauBtn">Carte Cadeau</button>
         </form>
-       
+                          @if (ViewData["IsAdmin"] != null && true.Equals(ViewData["IsAdmin"]))
+{
         <form asp-controller="Cart" asp-action="Checkout" method="post">
             <input type="hidden" name="modeDePaiementId" value="6" />
             <label for="justificationGratuit">Justification pour la commande gratuite :</label>
             <input type="text" id="justificationGratuit" name="justificationGratuit" />
             <button type="submit" class="btn btn-primary">Gratuit</button>
         </form>
+}
         </tr>
    
 </div>

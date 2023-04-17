@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CobrArWeb", "CobrArWeb\CobrArWeb.csproj", "{E077D07D-F37C-4908-BAFA-6B55358D48A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CobrArWeb.Tests", "CobrArWeb.Tests\CobrArWeb.Tests.csproj", "{93F79402-D7F8-46B6-B22C-F1744DE5F7AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CobrArWeb.Tests", "CobrArWeb.Tests\CobrArWeb.Tests.csproj", "{93F79402-D7F8-46B6-B22C-F1744DE5F7AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,5 +27,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DBBAA9F3-E9CB-4600-B955-535987719FCA}
+	EndGlobalSection
+	GlobalSection(NDepend) = preSolution
+		Project = ".\CobrArWeb.ndproj"
 	EndGlobalSection
 EndGlobal

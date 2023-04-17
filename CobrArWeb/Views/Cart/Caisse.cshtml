@@ -4,18 +4,22 @@
 
 <table class="table">
     <thead>
+                    @if (ViewData["IsAdmin"] != null && true.Equals(ViewData["IsAdmin"]))
+{
         <div>
+
             <a asp-controller="Cart" asp-action="Caisse" asp-route-filterType="all">Tous</a> |
             <a asp-controller="Cart" asp-action="Caisse" asp-route-filterType="day">Jour</a> |
             <a asp-controller="Cart" asp-action="Caisse" asp-route-filterType="week">Semaine</a> |
             <a asp-controller="Cart" asp-action="Caisse" asp-route-filterType="month">Mois</a>
         </div>
-
+}
         <tr>
             <th>Date et heure</th>
             <th>Equipe</th>
             <th>Produit</th>
             <th>Quantité</th>
+            <th>MDP</th>
             <th>Prix</th>
             <th>Ajustement du prix</th>
         </tr>
@@ -28,6 +32,7 @@
                 <td>@vente.Equipe</td>
                 <td>@vente.Produit</td>
                 <td>@vente.Quantity</td>
+                <td>@vente.MDPNom</td>
                 <td>@(vente.Product.Prix.HasValue ? (vente.Product.Prix.Value * vente.Quantity) : 0) €</td>
                 <td>@vente.AjustementPrix $</td>
             </tr>

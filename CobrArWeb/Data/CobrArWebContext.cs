@@ -17,7 +17,7 @@ namespace CobrArWeb.Data
 
         public DbSet<User> Users { get; set; }
         public virtual DbSet<Product> Products { get; set; }
-        public DbSet<Ventes> Ventes { get; set; }
+        public virtual DbSet<Ventes> Ventes { get; set; }
         public DbSet<Equipe> Equipes { get; set; }
         public DbSet<Categorie> Categories { get; set; }
         public DbSet<SousCategorie> SousCategories { get; set; }

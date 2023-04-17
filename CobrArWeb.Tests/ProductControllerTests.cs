@@ -1,13 +1,10 @@
 ﻿using CobrArWeb.Controllers;
 using CobrArWeb.Data;
-using CobrArWeb.Models.RechercheArbo;
 using CobrArWeb.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
+
 
 namespace CobrArWeb.Tests
 {
@@ -48,9 +45,7 @@ namespace CobrArWeb.Tests
 
             // Assert
             Assert.AreEqual(2, ((result as ViewResult).Model as IEnumerable<Product>).Count());
-            //var viewResult = Xunit.Assert.IsType<ViewResult>(result);
-            //var model = Xunit.Assert.IsAssignableFrom<IEnumerable<Product>>(viewResult.Model);
-            //Xunit.Assert.Equal(2, model.Count());
+          
         }
-    }
+      }
 }

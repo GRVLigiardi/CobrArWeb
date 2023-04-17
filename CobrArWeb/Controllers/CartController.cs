@@ -284,7 +284,7 @@ namespace CobrArWeb.Controllers
             decimal adjustedTotal = totalPrice + ajustementPrix + ajustementPrix2;
             ViewBag.adjustedTotal = adjustedTotal;
             ViewBag.ajustementPrix = ajustementPrix;
-            // Récupérez le MDP à partir de la base de données en utilisant modeDePaiementId
+            // Récupére le MDP à partir de la base de données en utilisant modeDePaiementId
             MDP mdp = _context.MDPs.FirstOrDefault(m => m.Id == modeDePaiementId);
 
             if (mdp == null)
@@ -293,12 +293,12 @@ namespace CobrArWeb.Controllers
                 return RedirectToAction("Panier");
             }
 
-            // Commencez une transaction
+            // Commence une transaction
             using (IDbContextTransaction transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    // Parcourez les articles du panier et mettez à jour la quantité du produit dans la base de données
+                    // Parcoure les articles du panier et mettez à jour la quantité du produit dans la base de données
                     foreach (Item item in cart)
                     {
                         Product product = _context.Products.SingleOrDefault(p => p.Id == item.Product.Id);
@@ -315,10 +315,10 @@ namespace CobrArWeb.Controllers
                             return RedirectToAction("Panier");
                         }
 
-                        // Mettez à jour la quantité du produit
+                        // Mette à jour la quantité du produit
                         product.Quantite -= item.Quantite;
 
-                        // Enregistrez la vente
+                        // Enregistre la vente
                         Ventes vente = new Ventes
                         {
                             Date = DateTime.Now,
@@ -341,19 +341,19 @@ namespace CobrArWeb.Controllers
                         _context.Ventes.Add(vente);
                     }
 
-                    // Enregistrez les modifications et validez la transaction
+                    // Enregistre les modifications et validez la transaction
                     _context.SaveChanges();
                     transaction.Commit();
 
-                    // Videz le panier et mettez à jour la session
+                    // Vide le panier et mettez à jour la session
                     cart.Clear();
-                    SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart); // Utilisez SetObjectAsJson
+                    SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart); // Utilise SetObjectAsJson
 
                     TempData["SuccessMessage"] = "Votre commande a été passée avec succès.";
                 }
                 catch (Exception ex)
                 {
-                    // Annulez la transaction en cas d'erreur
+                    // Annule la transaction en cas d'erreur
                     transaction.Rollback();
 
                     TempData["ErrorMessage"] = $"Une erreur s'est produite lors de la validation de votre commande: {ex.Message}";
@@ -364,7 +364,7 @@ namespace CobrArWeb.Controllers
         }
 
         [Route("caisse")]
-        public IActionResult Caisse(string filterType = "all")
+        public IActionResult Caisse(string filterType = "day")
         {
             DateTime now = DateTime.Now;
             DateTime startDate = now;

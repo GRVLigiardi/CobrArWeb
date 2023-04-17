@@ -16,12 +16,12 @@ namespace CobrArWeb.Services
 
 
 
+        // A SUIVRE : POUR TEST UNITAIRE
+
         public List<Product> GetProducts()
         {
             var products = _Context.Products.ToList();
             return products;
         }
-
-
     }
 }

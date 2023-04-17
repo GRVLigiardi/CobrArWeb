@@ -237,7 +237,7 @@ namespace CobrArWeb.Controllers
             return PartialView("_ProductHistories", groupedProductHistories.ToList());
         }
 
-        private void UpdateOrCreateProducts(Product product, string action, bool applyToAllSizes, bool applyToAllTeams, bool applyToAllSuppliers)
+        public void UpdateOrCreateProducts(Product product, string action, bool applyToAllSizes, bool applyToAllTeams, bool applyToAllSuppliers)
         {
             // Récupérer les produits concernés en fonction des options sélectionnées
             var productsToUpdate = _context.Products
